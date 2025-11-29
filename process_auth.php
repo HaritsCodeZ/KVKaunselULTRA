@@ -15,11 +15,11 @@
             $confirm = trim($_POST['confirm_password']);
 
             if (empty($student_id) || empty($password) || empty($confirm)) {
-                $_SESSION['error'] = "Isi semua kotak dulu bro!";
+                $_SESSION['error'] = "Pastikan semua kotah diisi ya!";
                 $_SESSION['error_type'] = 'register';
             }
             elseif ($password !== $confirm) {
-                $_SESSION['error'] = "Kata laluan tak sama lah!";
+                $_SESSION['error'] = "Kata laluan salah, sila cuba lagi!";
                 $_SESSION['error_type'] = 'register';
             }
             else {
@@ -27,7 +27,7 @@
                 $check->bind_param("s", $student_id);
                 $check->execute();
                 if ($check->get_result()->num_rows > 0) {
-                    $_SESSION['error'] = "Akaun ni dah wujud bro!";
+                    $_SESSION['error'] = "Akaun ini dah wujud";
                     $_SESSION['error_type'] = 'register';
                 }
                 else {
