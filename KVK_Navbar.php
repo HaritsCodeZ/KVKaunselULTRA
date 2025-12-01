@@ -90,15 +90,15 @@ if (basename($_SERVER['PHP_SELF']) === 'UltimateLoginPage.php') {
             <div class="nav-btn" onclick="toggleDropdown(this)">Perkhidmatan Kami <span class="chev">▼</span></div>
             <div class="dropdown">
                 <a href="#">Tempahan Sesi</a>
-                <a href="#">Program Kaunseling</a>
-                <a href="#">Bantuan Kecemasan</a>
+                <a href="#">Aktivit Bulanan</a>
+                <a href="#">TribbieAI - AI Kaunseling</a>
             </div>
         </div>
         
         <div class="nav-item">
             <div class="nav-btn" onclick="toggleDropdown(this)">Profil Kaunselor & PRS <span class="chev">▼</span></div>
             <div class="dropdown">
-                <a href="#">Panel Kaunselor</a>
+                <a href="KVK_ProfilKaunselor.php">Panel Kaunselor</a>
                 <a href="#">Ahli Pembimbing Rakan Sebaya</a>
             </div>
         </div>

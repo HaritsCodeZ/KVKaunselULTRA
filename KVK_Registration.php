@@ -21,7 +21,7 @@
         /* ECLIPSE — LEBIH SOLID & CANTIK */
         .eclipse-left, .eclipse-right {
             position:absolute;
-            width:900px; height:1300px;
+            width:1100px; height:1100px;
             top:50%; transform:translateY(-50%);
             background:rgba(175,116,177,0.66);   /* ← kurang transparent, lebih padu */
             border-radius:50%;
@@ -30,8 +30,8 @@
             transition:background .65s cubic-bezier(.4,0,.2,1), transform .65s cubic-bezier(.4,0,.2,1);
             z-index:2;
         }
-        .eclipse-left  { left:-400px;  justify-content:flex-end; padding-right:130px; }
-        .eclipse-right { right:-400px; justify-content:flex-start; padding-left:130px; }
+        .eclipse-left  { left:-550px;  justify-content:flex-end; padding-right:130px; }
+        .eclipse-right { right:-550px; justify-content:flex-start; padding-left:130px; }
 
         /* HOVER: eclipse scale sikit je, text je gerak masuk */
         .eclipse-left:hover,  .eclipse-right:hover { background:#B87AB8; transform:translateY(-50%) scale(1.02); }
