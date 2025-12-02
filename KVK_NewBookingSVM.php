@@ -1,190 +1,201 @@
 <?php session_start(); ?>
-
 <!DOCTYPE html>
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tempahan Kaunseling SVM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        html, body { 
-            height:100%; 
-            overflow:hidden; 
-            font-family:'Inter',sans-serif; 
-            background:#000;
+        *{margin:0;padding:0;box-sizing:border-box}
+        html,body{height:100%;overflow:hidden;font-family:'Poppins',sans-serif;background:#000}
+
+        .hero__video{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1;filter:brightness(1.05)}
+        .eclipse-left{position:absolute;width:1100px;height:1050px;top:49%;left:-530px;transform:translateY(-50%);background:rgba(175,116,177,0.82);border-radius:50%;display:flex;align-items:center;justify-content:flex-end;padding-right:130px;z-index:20}
+        .eclipse-text{color:white;font-size:140px;font-weight:bold;letter-spacing:-10px;user-select:none}
+
+        .white-card{position:absolute;height:850px;top:50%;left:57%;transform:translate(-50%,-50%);width:90%;max-width:1250px;background:#fff;border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,0.2);padding:45px 35px;z-index:10;border:1px solid #e8e8e8;overflow:hidden}
+
+        .logo-container{text-align:center;margin-bottom:30px;margin-top:-30px}
+        .logo-container img{height:70px;margin:0 15px}
+        .greeting,.sub-greeting{text-align:right;font-size:36px;font-weight:bold;color:#AF74B1;margin-right:20px;letter-spacing:-1px}
+        .sub-greeting{margin-bottom:8px}
+
+        /* Progress Circle */
+        .progress-master-circle{position:absolute;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(255,214,10,0.5);z-index:9999;transition:all .5s cubic-bezier(0.34,1.56,0.64,1);transform:translate(-50%,-50%)}
+        .progress-master-circle.active{background:#FFD557!important;box-shadow:0 12px 40px rgba(255,214,10,0.9)!important;transform:translate(-50%,-50%) scale(1.15)}
+        .progress-number{font-size:42px;font-weight:bold;color:#000;user-select:none}
+        #c1{background:#FFD557;top:23%;left:26.2%}
+        #c2,#c3,#c4,#c5{background:#8C5C8D}
+        #c2{top:36%;left:28.9%}
+        #c3{top:49%;left:29.7%}
+        #c4{top:62%;left:28.9%}
+        #c5{top:75%;left:26.2%}
+
+        /* Form */
+        .form-area{position:absolute;top:63%;right:59px;transform:translateY(-50%);width:420px;opacity:0;visibility:hidden;transition:opacity .6s ease}
+        .form-area.active{opacity:1;visibility:visible}
+        .form-group{margin-bottom:28px;text-align:right}
+        .form-group label{display:block;margin-bottom:10px;color:#AF74B1;font-size:24px;font-weight:bold}
+        .form-group input,.form-group select,.form-group textarea{width:100%;padding:18px 22px;border: 1px solid #AF74B1;border-radius:12px;font-size:18px;background:#f9f9f9;box-shadow:0 4px 12px rgba(0,0,0,0.5)}
+        .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#AF74B1;box-shadow:0 0 0 4px rgba(175,116,177,0.15)}
+        textarea{height:140px;resize:none}
+
+        /* Button Group — Kembali + Teruskan */
+        .button-group{
+            display:flex; justify-content:space-between; align-items:center;
+            margin-top:40px; gap:20px;
+        }
+        .btn-kembali{
+            width:45%; padding:18px; background:transparent; color:#AF74B1; border:2px solid #AF74B1;
+            border-radius:30px; font-size:20px; font-weight:700; cursor:pointer; transition:all .3s;
+        }
+        .btn-kembali:hover{
+            background:#AF74B1; color:white; transform:translateY(-3px);
+        }
+        .btn-teruskan{
+            width:55%; padding:18px; background:#AF74B1; color:white; border:none;
+            border-radius:30px; font-size:20px; font-weight:700; cursor:pointer; transition:all .3s;
+        }
+        .btn-teruskan:hover{
+            background:#945a96; transform:translateY(-3px); box-shadow:0 10px 25px rgba(175,116,177,0.4);
         }
 
-        /* Video Background */
-        .hero__video {
-            position:fixed; 
-            top:0; left:0; 
-            width:100%; height:100%; 
-            object-fit:cover;
-            z-index:1;
-            filter:brightness(1.05);
-        }
-
-        /* Kotak Putih - Sekarang boleh gerak bebas! */
-        .white-card {
-            position: absolute;
-            height: 850px;
-            /* Anda boleh ubah nilai top, left, right, bottom sesuka hati */
-            top: 50%;           /* ← ubah nilai ni untuk atas/bawah */
-            left:57%;
-            transform: translate(-50%, -50%);  /* tengah-tengah benda tu sendiri */
-            width: 90%;
-            max-width: 1250px;
-            background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-            padding: 45px 35px;
-            z-index: 10;                    /* Di belakang eclipse */
-            border: 1px solid #e8e8e8;
-        }
-
-        /* Eclipse Ungu + SVM - Layer paling atas */
-        .eclipse-left {
-            position: absolute;
-            width: 1100px;
-            height: 1050px;
-            top: 49%;
-            left: -530px;                   /* anda boleh gerakkan juga kalau nak */
-            transform: translateY(-50%);
-            background: rgba(175,116,177,0.82);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 130px;
-            cursor: pointer;
-            transition: all .6s ease;
-            z-index: 20;                    /* PALING ATAS! */
-            pointer-events: auto;
-        }
-
-        .eclipse-text {
-            color: white;
-            font-size: 140px;
-            font-weight: bold;
-            letter-spacing: -10px;
-            user-select: none;
-        }
-
-        /* === Bahagian dalam kotak putih (sama macam sebelum ni) === */
-        .logo-container { text-align:center; margin-bottom:30px; margin-top:-30px; }
-        .logo-container img { height:70px; margin:0 15px; }
-
-        .greeting {
-        text-align: right;           /* ← align ke kanan */
-        font-size: 36px;             /* saya besarkan sikit supaya nampak power */
-        font-weight: bold;                /* tebal gila (atau boleh guna bold je) */
-        color: #AF74B1;              /* warna ungu yang anda nak */
-        margin-bottom: 8px;
-        margin-right: 20px;          /* optional: bagi ruang sikit dari tepi kanan */
-        letter-spacing: -1px;        /* optional: rapatkan huruf supaya nampak moden */
-        }
-        .sub-greeting { 
-        text-align: right;           /* ← align ke kanan */
-         font-size: 36px;           /* saya besarkan sikit supaya nampak power */
-        font-weight: bold;            /* tebal gila (atau boleh guna bold je) */
-        color: #AF74B1;              /* warna ungu yang anda nak */
-        margin-bottom: 8px;
-        margin-right: 20px;          /* optional: bagi ruang sikit dari tepi kanan */
-        letter-spacing: -1px;  
-        }
-
-/* BULATAN KUNING No.1 — PALING ATAS SEKALI & boleh gerak bebas */
-.progress-master-circle_1 {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    background: #FFD557;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 10px 30px rgba(255, 214, 10, 0.5);
-    z-index: 9999 !important;           /* PALING ATAS — tak ada benda boleh halang! */
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    cursor: default;
-    top: 23%;                            /* ubah sini untuk atas/bawah */
-    left: 26.2%;                           /* ubah sini untuk kiri/kanan */
-    transform: translate(-50%, -50%);
-}
-
-
-.progress-master-circle_1 .progress-number {
-    font-size: 42px;
-    font-weight: bold;
-    color: #000000ff;
-    user-select: none;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* BULATAN KUNING No.2 — PALING ATAS SEKALI & boleh gerak bebas */
-.progress-master-circle_2 {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    background: #8C5C8D;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 10px 30px rgba(255, 214, 10, 0.5);
-    z-index: 9999 !important;           /* PALING ATAS — tak ada benda boleh halang! */
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    cursor: default;
-    top: 38%;                            /* ubah sini untuk atas/bawah */
-    left: 28.9%;                           /* ubah sini untuk kiri/kanan */
-    transform: translate(-50%, -50%);
-}
-
-
-.progress-master-circle_2 .progress-number {
-    font-size: 42px;
-    font-weight: bold;
-    color: #080708ff;
-    user-select: none;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+        .floating-home-manual{position:fixed;top:58px;right:210px;z-index:999999;cursor:pointer;transition:all .35s;filter:drop-shadow(0 10px 30px rgba(175,116,177,0.6))}
+        .floating-home-manual:hover{transform:scale(1.12) translateY(-4px);filter:drop-shadow(0 15px 40px rgba(175,116,177,0.8))}
     </style>
 </head>
 <body>
 
-    <!-- Video Background -->
     <video class="hero__video" autoplay muted loop playsinline poster="ImageGalleries/ImageCounseling1.jpg">
         <source src="VideoGalleries/KVK_BookingVideo.mp4" type="video/mp4">
     </video>
 
-    <!-- Eclipse Ungu + SVM -->
-        <div class="eclipse-left">
-            <div class="eclipse-text">SVM</div>
-        </div>
-    </a>
+    <div class="eclipse-left"><div class="eclipse-text">SVM</div></div>
 
-    <!-- Kotak Putih -->
     <div class="white-card">
         <div class="logo-container">
-            <img src="ImageGalleries/KVKaunsel_Logo-New.png" alt="Logo 1">
-            <img src="ImageGalleries/LOGO_KV.png" alt="Logo 2">
-            <img src="ImageGalleries/LOGO_PRS_RELOADED.png" alt="Logo 3">
+            <img src="ImageGalleries/KVKaunsel_Logo-New.png">
+            <img src="ImageGalleries/LOGO_KV.png">
+            <img src="ImageGalleries/LOGO_PRS_RELOADED.png">
+        </div>
+        <h2 class="greeting">Hai !</h2>
+        <p class="sub-greeting">Sebelum tempahan<br>Mari kita berkenalan dahulu</p>
+
+        <!-- STEP 1 -->
+        <div class="form-area active" id="step1">
+            <form onsubmit="return false;">
+                <div class="form-group"><label>Nama Penuh Anda</label><input type="text" name="nama" required placeholder="Masukkan nama penuh anda"></div>
+                <div class="form-group"><label>Program Anda</label>
+                    <select name="program" required>
+                        <option value="" disabled selected>Pilih program anda</option>
+                        <option>Program Teknologi Elektrik</option><option>Perkaunan</option><option>Program Sistem Komputer Dan Rangkaian</option>
+                        <option>Program Hospitaliti Seni Kulinari</option><option>Program Teknologi Automotif</option><option>Program Teknologi Kimpalan</option>
+                        <option>Program Teknologi Pemesinan Industri</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Semester Anda</label>
+                    <select name="semester" required><option value="" disabled selected>Pilih semester</option><option>Semester 1</option><option>Semester 2</option><option>Semester 3</option><option>Semester 4</option></select>
+                </div>
+                <div class="button-group">
+                    <div style="width:45%"></div> <!-- placeholder kosong supaya Teruskan kekal kanan -->
+                    <button type="button" class="btn-teruskan" onclick="nextStep(2)">Teruskan</button>
+                </div>
+            </form>
         </div>
 
-        <h2 class="greeting">Hai !</h2>
-        <p class="sub-greeting">Sebelum tempahan,<br>Mari kita berkenalan dahulu</p>
+        <!-- STEP 2 -->
+        <div class="form-area" id="step2">
+            <form onsubmit="return false;">
+                <div class="form-group"><label>Jantina Anda</label><select name="jantina" required><option value="" disabled selected>Pilih jantina</option><option>Lelaki</option><option>Perempuan</option></select></div>
+                <div class="form-group"><label>Kaum Anda</label><select name="kaum" required><option value="" disabled selected>Pilih kaum</option><option>Melayu</option><option>Cina</option><option>Bumiputera</option><option>Lain-lain</option></select></div>
+                <div class="form-group"><label>No Telefon Anda</label><input type="tel" name="telefon" required placeholder="Contoh: 60123456789" pattern="[0-9]{10,12}"></div>
+                <div class="button-group">
+                    <button type="button" class="btn-kembali" onclick="nextStep(1)">Kembali</button>
+                    <button type="button" class="btn-teruskan" onclick="nextStep(3)">Teruskan</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="form-area" id="step3">
+            <form onsubmit="return false;">
+                <div class="form-group"><label>Pilih Tarikh & Masa Tempahan</label><input type="datetime-local" name="tarikh_masa" required style="direction:ltr;"></div>
+                <div class="form-group"><label>Jenis Sesi Kaunseling</label>
+                    <select name="jenis_sesi" required>
+                        <option value="" disabled selected>Pilih jenis sesi</option>
+                        <option value="Online">Online (Google Meet)</option>
+                        <option value="Bersemuka">Bersemuka (Di Pejabat Kaunseling)</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Pilih Kaunselor Pilihan Anda</label>
+                    <select name="kaunselor" required>
+                        <option value="" disabled selected>Pilih kaunselor</option>
+                        <option>Encik Muhirman Bin Mu Alim</option>
+                        <option>Puan Tanita Anak Numpang</option>
+                        <option>Cikgu Whilemina Thimah Gregory Anak Jimbun</option>
+                        <option>Tiada Pilihan Khusus (Sesiapa Sahaja)</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn-kembali" onclick="nextStep(2)">Kembali</button>
+                    <button type="button" class="btn-teruskan" onclick="nextStep(4)">Teruskan</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="form-area" id="step4">
+            <form onsubmit="return false;">
+                <div class="form-group"><label>Sebab / Isu yang Ingin Dibincangkan</label>
+                    <textarea name="sebab" required placeholder="Ceritakan sedikit tentang apa yang anda alami... (contoh: stress, masalah keluarga, kerjaya, dll)"></textarea>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn-kembali" onclick="nextStep(3)">Kembali</button>
+                    <button type="button" class="btn-teruskan" onclick="nextStep(5)">Hantar Tempahan</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- STEP 5 — Terima Kasih -->
+        <div class="form-area" id="step5" style="text-align:center;padding-top:80px">
+            <div style="font-size:120px;margin-bottom:20px">✓</div>
+            <h2 style="color:#AF74B1;font-size:44px;margin-bottom:20px">Terima Kasih!</h2>
+            <p style="font-size:22px;color:#555;line-height:1.8;max-width:380px;margin:0 auto 40px">
+                Tempahan anda telah berjaya dihantar!<br>
+                Kaunselor akan hubungi anda melalui WhatsApp dalam masa <strong>24 jam</strong>.
+            </p>
+            <button type="button" class="btn-teruskan" style="width:70%;background:#27ae60" onclick="location.href='KVK_Registration.php'">
+                Kembali ke Dashboard
+            </button>
+        </div>
+
     </div>
 
-    <!-- BULATAN KUNING No.1 — PALING ATAS & boleh gerak sesuka hati -->
-    <div class="progress-master-circle_1">
-        <span class="progress-number">1</span>
-    </div>
+    <!-- Progress Circles -->
+    <div class="progress-master-circle active" id="c1"><span class="progress-number">1</span></div>
+    <div class="progress-master-circle" id="c2"><span class="progress-number">2</span></div>
+    <div class="progress-master-circle" id="c3"><span class="progress-number">3</span></div>
+    <div class="progress-master-circle" id="c4"><span class="progress-number">4</span></div>
+    <div class="progress-master-circle" id="c5"><span class="progress-number">5</span></div>
 
-    <div class="progress-master-circle_2">
-        <span class="progress-number">2</span>
-    </div>
+    <a href="KVK_Registration.php" class="floating-home-manual">
+        <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="30" cy="30" r="28" fill="#AF74B1" stroke="white" stroke-width="3"/>
+            <path d="M30 17L21 26V42H27V32H33V42H39V26L30 17Z" fill="white"/>
+            <path d="M30 24V17L41 28H19L30 24Z" fill="#8B4789"/>
+        </svg>
+    </a>
 
+    <script>
+        function nextStep(n) {
+            document.querySelectorAll('.form-area').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.progress-master-circle').forEach((el, i) => {
+                el.classList.toggle('active', i + 1 <= n);
+            });
+            const step = document.getElementById('step' + n);
+            if (step) step.classList.add('active');
+        }
+    </script>
 </body>
 </html>

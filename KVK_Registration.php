@@ -64,7 +64,7 @@
         <source src="VideoGalleries/KVK_BookingVideo.mp4" type="video/mp4">
     </video>
 
-    <a href="KVK_BookingSvm.php" style="text-decoration:none;">
+    <a href="KVK_NewBookingSVM.php" style="text-decoration:none;">
         <div class="eclipse-left">
             <div class="eclipse-text">SVM <span class="arrow">→</span></div>
         </div>
