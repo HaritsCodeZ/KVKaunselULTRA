@@ -36,8 +36,8 @@
         .form-area{position:absolute;top:63%;right:59px;transform:translateY(-50%);width:420px;opacity:0;visibility:hidden;transition:opacity .6s ease}
         .form-area.active{opacity:1;visibility:visible}
         .form-group{margin-bottom:28px;text-align:right}
-        .form-group label{display:block;margin-bottom:10px;color:#AF74B1;font-size:24px;font-weight:bold}
-        .form-group input,.form-group select,.form-group textarea{width:100%;padding:18px 22px;border: 1px solid #AF74B1;border-radius:12px;font-size:18px;background:#f9f9f9;box-shadow:0 4px 12px rgba(0,0,0,0.5)}
+        .form-group label{display:block;margin-bottom:10px;color:#AF74B1;font-size:24px;font-weight:bold;}
+        .form-group input,.form-group select,.form-group textarea{width:100%;padding:18px 22px;border: 1px solid #AF74B1;border-radius:12px;font-size:18px;font-family:'Poppins',sans-serif;background:#f9f9f9;box-shadow:0 4px 12px rgba(0,0,0,0.5)}
         .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#AF74B1;box-shadow:0 0 0 4px rgba(175,116,177,0.15)}
         textarea{height:140px;resize:none}
 
@@ -63,6 +63,139 @@
 
         .floating-home-manual{position:fixed;top:58px;right:210px;z-index:999999;cursor:pointer;transition:all .35s;filter:drop-shadow(0 10px 30px rgba(175,116,177,0.6))}
         .floating-home-manual:hover{transform:scale(1.12) translateY(-4px);filter:drop-shadow(0 15px 40px rgba(175,116,177,0.8))}
+
+        /* Animasi Step 5 */
+@keyframes fadeScale {
+    0% {opacity: 0; transform: translate(-50%, -50%) scale(0.6);}
+    100% {opacity: 1; transform: translate(-50%, -50%) scale(1);}
+}
+
+/* Wrapper Box */
+#step5-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+    z-index: 9999;
+    display: none;
+}
+
+/* Kad Step 5 */
+.step5-wrapper {
+    background: #ffffffee;
+    padding: 50px 40px;
+    width: 1050px;
+    margin: auto;
+    border-radius: 30px;
+    box-shadow: 0 20px 50px rgba(175,116,177,0.95);
+    animation: fadeScale .8s ease;
+}
+
+/* Icon Tick */
+.step5-icon {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: #27ae60;
+    color: white;
+    font-size: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    margin-bottom: 25px;
+
+    box-shadow: 0 10px 30px rgba(39,174,96,0.6),
+                0 0 25px rgba(255,255,255,0.8) inset;
+}
+
+/* Title */
+.step5-title {
+    font-size: 80px;
+    font-weight: 900;
+    color: #AF74B1;
+    margin-bottom: 10px;
+}
+
+/* Description */
+.step5-desc {
+    font-size: 30px;
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 35px;
+}
+
+/* Button */
+.step5-wrapper .btn-teruskan {
+    width: 75%;
+    padding: 18px;
+    font-size: 22px;
+    font-weight: 700;
+    border-radius: 30px;
+    transition: .3s;
+}
+
+.step5-wrapper .btn-teruskan:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(39,174,96,0.5);
+}
+
+/* BUTANG SUCCESS STEP 5 — HIJAU PREMIUM + HOVER GEMPUR */
+.btn-success-dashboard {
+    background: linear-gradient(135deg, #27ae60, #219653) !important;
+    color: white;
+    width: 70%;
+    max-width: 500px;
+    padding: 22px 20px;
+    font-size: 26px;
+    font-weight: 800;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 15px 35px rgba(39,174,96,0.5);
+    transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Hover effect — naik + glow + ripple */
+.btn-success-dashboard:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 25px 60px rgba(39,174,96,0.8);
+}
+
+/* Ripple effect bila klik (cantik gila) */
+.btn-success-dashboard::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+    pointer-events: none;
+}
+
+.btn-success-dashboard:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Tambah icon rumah kecil dalam butang (optional tapi nampak pro) */
+.btn-success-dashboard::after {
+    content: " ↩";
+    margin-left: 10px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
     </style>
 </head>
 <body>
@@ -125,16 +258,14 @@
                     <select name="jenis_sesi" required>
                         <option value="" disabled selected>Pilih jenis sesi</option>
                         <option value="Online">Online (Google Meet)</option>
-                        <option value="Bersemuka">Bersemuka (Di Pejabat Kaunseling)</option>
+                        <option value="Bersemuka">Bersemuka (Di Bilik Kaunseling)</option>
                     </select>
                 </div>
-                <div class="form-group"><label>Pilih Kaunselor Pilihan Anda</label>
-                    <select name="kaunselor" required>
-                        <option value="" disabled selected>Pilih kaunselor</option>
-                        <option>Encik Muhirman Bin Mu Alim</option>
-                        <option>Puan Tanita Anak Numpang</option>
-                        <option>Cikgu Whilemina Thimah Gregory Anak Jimbun</option>
-                        <option>Tiada Pilihan Khusus (Sesiapa Sahaja)</option>
+                <div class="form-group"><label>Jenis Kaunseling</label>
+                    <select name="JenisKaunseling" required>
+                        <option value="" disabled selected>Pilih Jenis Kaunseling</option>
+                        <option>Kaunseling Individu</option>
+                        <option>Kaunseling Kelompok</option>
                     </select>
                 </div>
                 <div class="button-group">
@@ -147,6 +278,15 @@
         <!-- STEP 4 -->
         <div class="form-area" id="step4">
             <form onsubmit="return false;">
+                <div class="form-group"><label>Plih Kaunselor anda</label>
+                    <select name="JenisKaunseling" required>
+                        <option value="" disabled selected>Pilih kaunselor</option>
+                        <option>Encik Muhirman Bin Mu Alim</option>
+                        <option>Tanita Anak Numpang</option>
+                        <option>Whilemina Thimah Gregory Anak Jimbun</option>
+                    </select>
+                </div>
+
                 <div class="form-group"><label>Sebab / Isu yang Ingin Dibincangkan</label>
                     <textarea name="sebab" required placeholder="Ceritakan sedikit tentang apa yang anda alami... (contoh: stress, masalah keluarga, kerjaya, dll)"></textarea>
                 </div>
@@ -157,18 +297,22 @@
             </form>
         </div>
 
-        <!-- STEP 5 — Terima Kasih -->
-        <div class="form-area" id="step5" style="text-align:center;padding-top:80px">
-            <div style="font-size:120px;margin-bottom:20px">✓</div>
-            <h2 style="color:#AF74B1;font-size:44px;margin-bottom:20px">Terima Kasih!</h2>
-            <p style="font-size:22px;color:#555;line-height:1.8;max-width:380px;margin:0 auto 40px">
-                Tempahan anda telah berjaya dihantar!<br>
-                Kaunselor akan hubungi anda melalui WhatsApp dalam masa <strong>24 jam</strong>.
-            </p>
-            <button type="button" class="btn-teruskan" style="width:70%;background:#27ae60" onclick="location.href='KVK_Registration.php'">
-                Kembali ke Dashboard
-            </button>
-        </div>
+        <div id="step5-content" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:90%; max-width:900px; text-align:center; z-index:9999;">
+    <div style="font-size:110px; color:#27ae60; margin-bottom:20px;">✔</div>
+    <h1 style="font-size:78px; font-weight:900; color:#AF74B1; margin:15px 0;">Terima Kasih!</h1>
+    <p style="font-size:28px; color:#333; line-height:1.6; margin-bottom:40px;">
+        Tempahan anda telah berjaya dihantar.<br>
+        Kaunselor akan menghubungi anda melalui KaunselMel<br>
+        dalam masa <strong>24 jam</strong>.
+    </p>
+    <button type="button" class="btn-success-dashboard" 
+        onclick="location.href='KVK_Registration.php'">
+    Tempahan Selesai
+</button>
+</div>
+
+
+
 
     </div>
 
@@ -188,14 +332,47 @@
     </a>
 
     <script>
-        function nextStep(n) {
-            document.querySelectorAll('.form-area').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.progress-master-circle').forEach((el, i) => {
-                el.classList.toggle('active', i + 1 <= n);
-            });
-            const step = document.getElementById('step' + n);
-            if (step) step.classList.add('active');
-        }
-    </script>
+function nextStep(n) {
+    // Reset semua form + step5
+    document.querySelectorAll('.form-area').forEach(el => el.classList.remove('active'));
+    const successBox = document.getElementById('step5-content');
+    successBox.style.display = 'none';
+    successBox.classList.remove('animate'); // buang animasi lama
+
+    const g  = document.querySelector('.greeting');
+    const sg = document.querySelector('.sub-greeting');
+
+    if (n === 5) {
+        g.style.display = "none";
+        sg.style.display = "none";
+
+        // Tunjuk Step 5 + trigger animasi gempak
+        successBox.style.display = 'block';
+        setTimeout(() => successBox.classList.add('animate'), 10);
+
+        // Semua progress circle jadi kuning
+        document.querySelectorAll('.progress-master-circle').forEach(el => el.classList.add('active'));
+        return;
+    }
+
+    // Step 1-4 biasa
+    if (n === 1 || n === 2) {
+        g.style.display = "block"; sg.style.display = "block";
+        g.textContent = "Hai !";
+        sg.innerHTML = "Sebelum tempahan<br>Mari kita berkenalan dahulu";
+    } else if (n === 3 || n === 4) {
+        g.style.display = "block"; sg.style.display = "block";
+        g.textContent = "Baiklah";
+        sg.innerHTML = "Sekarang mari<br>kita mula sesi tempahan";
+    }
+
+    document.getElementById('step' + n).classList.add('active');
+    document.querySelectorAll('.progress-master-circle').forEach((el, i) => {
+        el.classList.toggle('active', i + 1 <= n);
+    });
+}
+</script>
+
+
 </body>
 </html>
