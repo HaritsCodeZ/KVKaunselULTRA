@@ -70,7 +70,7 @@
         </div>
     </a>
 
-    <a href="KVK_BookingDvm.php" style="text-decoration:none;">
+    <a href="KVK_NewBookingDvm.php" style="text-decoration:none;">
         <div class="eclipse-right">
             <div class="eclipse-text"><span class="arrow">←</span> DVM</div>
         </div>
