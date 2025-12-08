@@ -1,0 +1,60 @@
+2025-12-08 07:51:33
+Array
+(
+)
+
+
+2025-12-08 08:05:44
+Array
+(
+    [tahap] => SVM
+    [nama] => Muhammad Harits Fikri Bin Hassan
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2025-12-05T16:06
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Tanita Anak Numpang
+    [sebab] => sdsd
+)
+
+
+2025-12-08 08:08:00
+Array
+(
+    [tahap] => DVM
+    [nama] => Nur Raudhah Amirah Binti Azman
+    [program] => Perakaunan
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2025-12-09T05:09
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => saya stress
+)
+
+
+2025-12-08 08:12:57
+Array
+(
+    [tahap] => DVM
+    [nama] => Mohd Sharfik Bin Hamid
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 4
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0149303688
+    [tarikh_masa] => 2025-12-10T21:30
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => saya stress
+)
+
+

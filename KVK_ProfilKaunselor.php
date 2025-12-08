@@ -1,3 +1,8 @@
+<?php 
+session_start();  // PENTING! Letak di atas sekali
+// include 'config.php'; atau database connection kalau ada
+?>
+
 <?php include 'KVK_Navbar.php'; ?>
 <!DOCTYPE html>
 <html lang="ms">

@@ -142,12 +142,14 @@
   width: 680px;          /* ← ubah nilai ni je (contoh: 680px, 720px, 750px) */
   max-width: 95%;        /* biar tak melimpah kat phone */
 }
-  .image-card img{
+  .image-card img,
+.image-card video{
   width:100%;
-  height:479px;           /* ubah nilai ni je */
-  object-fit:cover;       /* penting! biar tak stretch */
+  height:479px;
+  object-fit:cover;
   display:block;
 }
+
 .hero-right {
   transform: translateY(-40px);     /* naik = nilai negatif */
   /* atau */
@@ -156,7 +158,7 @@
   .college-name{
   position:absolute;
   transform: translateY(559px);     /* naik = nilai negatif */
-  right:275px;
+  right:165px;
   background:rgba(0,0,0,0.4);
   backdrop-filter:blur(10px);
   padding:10px 20px;
@@ -245,7 +247,7 @@
         </div>
         <br><br>
         <br><br>  
-        <h1>Sistem<br>Kaunseling<br>Pelajar KV<br><span>KVKAUNSEL!</span></h1>
+        <h1>Sistem<br>Tempahan<br>Kaunseling Pelajar<br><span>KVKAUNSEL!</span></h1>
         <p class="lead">
           Tempah sesi kaunseling dengan cepat, mudah dan selamat. Kami faham cabaran anda dan disitulah KVKaunsel sedia membantu anda!
         </p>
@@ -263,10 +265,12 @@
       </section>
 
       <div class="hero-right">
-        <div class="image-card">
-          <img src="ImageGalleries/ImageCounseling1.jpg" alt="Sesi kaunseling penuh empati">
-        </div>
-      </div>
+          <div class="image-card">
+              <video autoplay muted loop playsinline>
+                  <source src="VideoGalleries/KVK_SideHomeVideo.mp4" type="video/mp4">
+              </video>
+  </div>
+</div>
     </div>
   </main>
 

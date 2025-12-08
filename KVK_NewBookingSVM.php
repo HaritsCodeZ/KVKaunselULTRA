@@ -196,9 +196,63 @@
     font-weight: bold;
 }
 
+.toast-notification {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #AF74B1, #ac4cafff);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 50px;
+            box-shadow: 0 15px 40px rgba(249, 77, 106, 0.6);
+            font-size: 22px;
+            font-weight: 700;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            opacity: 0;
+        }
+        .toast-notification.show {
+            bottom: 50px;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-20px);
+            animation: wobble 0.6s ease;
+        }
+        .toast-notification .emoji {
+            font-size: 40px;
+            animation: bounce 1.5s infinite;
+        }
+        @keyframes wobble {
+            0%,100% { transform: translateX(-50%) rotate(0deg); }
+            15% { transform: translateX(-50%) rotate(-5deg); }
+            30% { transform: translateX(-50%) rotate(3deg); }
+            45% { transform: translateX(-50%) rotate(-3deg); }
+            60% { transform: translateX(-50%) rotate(2deg); }
+            75% { transform: translateX(-50%) rotate(-1deg); }
+        }
+        @keyframes bounce {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Semua CSS asal anda di sini (saya tak ulang panjang-panjang) */
+        *{margin:0;padding:0;box-sizing:border-box}
+        html,body{height:100%;overflow:hidden;font-family:'Poppins',sans-serif;background:#000}
+        /* ... (copy semua CSS asal anda sampai habis) ... */
     </style>
 </head>
 <body>
+
+    <!-- Toast (awalnya tersembunyi) -->
+    <div class="toast-notification" id="toast">
+        <div class="emoji">Oops!</div>
+        <div>Hey! Jangan tergesa-gesa sangat! 🏃‍♂️<br>
+             <span style="font-size:18px;">Sila isi <strong>SEMUA</strong> ruangan dulu ya 😘</span>
+        </div>
+    </div>
 
     <video class="hero__video" autoplay muted loop playsinline poster="ImageGalleries/ImageCounseling1.jpg">
         <source src="VideoGalleries/KVK_BookingVideo.mp4" type="video/mp4">
@@ -332,44 +386,100 @@
     </a>
 
     <script>
+function showToast() {
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3');
+    audio.volume = 0.3;
+    audio.play().catch(()=>{});
+    setTimeout(() => toast.classList.remove('show'), 4500);
+}
+
 function nextStep(n) {
-    // Reset semua form + step5
-    document.querySelectorAll('.form-area').forEach(el => el.classList.remove('active'));
-    const successBox = document.getElementById('step5-content');
-    successBox.style.display = 'none';
-    successBox.classList.remove('animate'); // buang animasi lama
+    const currentStep = n - 1;
+    const form = document.querySelector(`#step${currentStep} form`);
+    const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
 
-    const g  = document.querySelector('.greeting');
-    const sg = document.querySelector('.sub-greeting');
+    let allFilled = true;
+    inputs.forEach(input => {
+        if (!input.value.trim()) {
+            allFilled = false;
+            input.style.borderColor = "#ff6b6b";
+            input.style.boxShadow = "0 0 0 4px rgba(255,107,107,0.2)";
+            setTimeout(() => {
+                input.style.borderColor = "#AF74B1";
+                input.style.boxShadow = "0 4px 12px rgba(0,0,0,0.5)";
+            }, 2000);
+        }
+    });
 
-    if (n === 5) {
-        g.style.display = "none";
-        sg.style.display = "none";
-
-        // Tunjuk Step 5 + trigger animasi gempak
-        successBox.style.display = 'block';
-        setTimeout(() => successBox.classList.add('animate'), 10);
-
-        // Semua progress circle jadi kuning
-        document.querySelectorAll('.progress-master-circle').forEach(el => el.classList.add('active'));
+    if (!allFilled) {
+        showToast();
         return;
     }
 
-    // Step 1-4 biasa
-    if (n === 1 || n === 2) {
-        g.style.display = "block"; sg.style.display = "block";
-        g.textContent = "Hai !";
-        sg.innerHTML = "Sebelum tempahan<br>Mari kita berkenalan dahulu";
-    } else if (n === 3 || n === 4) {
-        g.style.display = "block"; sg.style.display = "block";
-        g.textContent = "Baiklah";
-        sg.innerHTML = "Sekarang mari<br>kita mula sesi tempahan";
+    // Sembunyi semua step
+    document.querySelectorAll('.form-area').forEach(el => el.classList.remove('active'));
+
+    if (n === 5) {
+        // INI YANG KAU TUNGGU — HANTAR DATA + TUNJUK STEP 5
+        submitBooking();
+        return;
     }
 
+    // Tunjuk step baru
     document.getElementById('step' + n).classList.add('active');
+
+    // Update progress circle
     document.querySelectorAll('.progress-master-circle').forEach((el, i) => {
         el.classList.toggle('active', i + 1 <= n);
     });
+
+    // Update greeting
+    const g = document.querySelector('.greeting');
+    const sg = document.querySelector('.sub-greeting');
+    if (n <= 2) {
+        g.textContent = "Hai !";
+        sg.innerHTML = "Sebelum tempahan<br>Mari kita berkenalan dahulu";
+    } else {
+        g.textContent = "Baiklah";
+        sg.innerHTML = "Sekarang mari<br>kita mula sesi tempahan";
+    }
+}
+
+// INI FUNGSI YANG AKAN HANTAR DATA KE DATABASE
+function submitBooking() {
+    const f = new FormData();
+    f.append('tahap', 'SVM'); // tukar ke 'DVM' kalau guna form DVM
+    f.append('nama', document.querySelector('#step1 input[name="nama"]').value);
+    f.append('program', document.querySelector('#step1 select[name="program"]').value);
+    f.append('semester', document.querySelector('#step1 select[name="semester"]').value);
+    f.append('jantina', document.querySelector('#step2 select[name="jantina"]').value);
+    f.append('kaum', document.querySelector('#step2 select[name="kaum"]').value);
+    f.append('telefon', document.querySelector('#step2 input[name="telefon"]').value);
+    f.append('tarikh_masa', document.querySelector('#step3 input[name="tarikh_masa"]').value);
+    f.append('jenis_sesi', document.querySelector('#step3 select[name="jenis_sesi"]').value);
+    f.append('jenis_kaunseling', document.querySelector('#step3 select[name="JenisKaunseling"]').value); // nama besar
+    f.append('kaunselor', document.querySelector('#step4 select[name="JenisKaunseling"]').value); // nama sama
+    f.append('sebab', document.querySelector('#step4 textarea[name="sebab"]').value);
+
+    fetch('save_booking.php', {
+        method: 'POST',
+        body: f
+    })
+    .then(r => r.json())
+    .then(res => {
+        if(res.success) {
+            // Tunjuk success screen
+            document.querySelector('.greeting').style.display = 'none';
+            document.querySelector('.sub-greeting').style.display = 'none';
+            document.getElementById('step5-content').style.display = 'block';
+            document.querySelectorAll('.progress-master-circle').forEach(el => el.classList.add('active'));
+        } else {
+            alert('Gagal hantar tempahan: ' + (res.error || 'Unknown'));
+        }
+    })
+    .catch(() => alert('Ralat sambungan. Pastikan save_booking.php wujud!'));
 }
 </script>
 

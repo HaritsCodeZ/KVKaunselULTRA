@@ -1,18 +1,19 @@
 <?php
 session_start();
-$admin_name = "Cikgu Muhirman";
+if(!isset($_SESSION['kaunselor_id'])) {
+    header("Location: login_kaunselor.php");
+    exit;
+}
+$kaunselor_id = $_SESSION['kaunselor_id'];
+$kaunselor_nama = $_SESSION['kaunselor_nama'] ?? 'Kaunselor';
 
-// Koneksi database
 $pdo = new PDO("mysql:host=localhost;dbname=kvkaunsel_db", "root", "");
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Filter tahap
-$filter = $_GET['tahap'] ?? '';
-$where = $filter && in_array($filter, ['SVM','DVM']) ? "WHERE tahap = ?" : "";
-$sql = "SELECT * FROM tempahan_kaunseling $where ORDER BY tarikh_tempahan DESC";
-$stmt = $pdo->prepare($sql);
-$stmt->execute($filter ? [$filter] : []);
-$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Tukar query — hanya tunjuk tempahan untuk kaunselor yang login
+$stmt = $pdo->prepare("SELECT * FROM tempahan_kaunseling WHERE kaunselor_id = ? ORDER BY tarikh_tempahan DESC");
+$stmt->execute([$kaunselor_id]);
+$data = $stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
