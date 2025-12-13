@@ -1,6 +1,45 @@
 <?php
 session_start();
 $admin_name = "Cikgu Muhirman";
+
+// Database connection
+try {
+    $pdo = new PDO("mysql:host=localhost;dbname=kvkaunsel_db", "root", "");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
+// 1. Get latest 3 bookings
+$stmt_recent = $pdo->query("
+    SELECT nama, tarikh_masa, jenis_kaunseling, status 
+    FROM tempahan_kaunseling 
+    ORDER BY tarikh_tempahan DESC 
+    LIMIT 5
+");
+$recent_students = $stmt_recent->fetchAll(PDO::FETCH_ASSOC);
+
+// 2. Get percentage by jenis kaunseling
+$stmt_types = $pdo->query("
+    SELECT jenis_kaunseling, COUNT(*) as count 
+    FROM tempahan_kaunseling 
+    GROUP BY jenis_kaunseling
+");
+$type_data = $stmt_types->fetchAll(PDO::FETCH_ASSOC);
+
+$total_cases = array_sum(array_column($type_data, 'count'));
+$percentages = [];
+foreach ($type_data as $row) {
+    $percent = $total_cases > 0 ? round(($row['count'] / $total_cases) * 100) : 0;
+    $percentages[$row['jenis_kaunseling']] = $percent;
+}
+
+// Default common types (so bars always show even if 0)
+$common_types = ['Akademik' => 0, 'Emosi' => 0, 'Disiplin' => 0, 'Kerjaya' => 0, 'Peribadi' => 0];
+foreach ($common_types as $type => $val) {
+    $common_types[$type] = $percentages[$type] ?? 0;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -12,39 +51,50 @@ $admin_name = "Cikgu Muhirman";
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
+  html, body {
+    height: 100%;
+    overflow: hidden; /* This disables scrolling completely */
+}
   :root {
-    --purple: #8b5cf6;
-    --pink: #ec4899;
-    --darkpurple: #6b21a8;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: 'Inter', sans-serif; background:#f9f5ff; display:flex; color:#333; }
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+            --darkpurple: #6b21a8;
+            --light: #f8f9ff;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Inter', sans-serif; background:var(--light); display:flex; color:#333; min-height:100vh; }
 
-  /* SIDEBAR */
-  .sidebar {
-    width: 280px; background: var(--darkpurple); color: white; height: 100vh;
-    padding: 30px 24px; position:fixed; font_weight:bold;
-  }
-  .logo { display:flex; align-items:center; margin-bottom:50px; font-size:22px; font-weight:700; }
-  .logo i { font-size:28px; margin-right:12px; background:var(--purple); width:48px; height:48px;
-    border-radius:14px; display:flex; align-items:center; justify-content:center; }
-  .menu-item { display:flex; align-items:center; padding:14px 18px; border-radius:12px;
-    margin-bottom:8px; cursor:pointer; transition:0.3s; }
-  .menu-item:hover, .menu-item.active { background:rgba(255, 255, 255, 0.3); }
-  .menu-item i { width:40px; font-size:18px; }
-  .menu-item span { margin-left:16px; font-size:15px; }
+        /* SIDEBAR */
+        .sidebar {
+            width: 280px; background: var(--darkpurple); color: white; height: 100vh;
+            padding: 30px 24px; position:fixed; overflow-y:auto;
+        }
+        .logo { display:flex; align-items:center; margin-bottom:50px; font-size:24px; font-weight:800; }
+        .logo i { font-size:32px; margin-right:14px; background:var(--purple); width:52px; height:52px;
+            border-radius:16px; display:flex; align-items:center; justify-content:center; }
+        .menu-item {
+            display:flex; align-items:center; padding:16px 20px; border-radius:14px;
+            margin-bottom:10px; cursor:pointer; transition:0.3s; font-weight:600;
+        }
+        .menu-item:hover { background:rgba(255,255,255,0.15); }
+        .menu-item.active { background:rgba(255,255,255,0.25); box-shadow:0 8px 20px rgba(0,0,0,0.2); }
+        .menu-item i { width:40px; font-size:19px; text-align:center; }
+        .menu-item span { margin-left:16px; font-size:15.5px; }
 
-  /* MAIN */
-  .main { margin-left:280px; width:calc(100% - 280px); padding:30px; }
+        /* MAIN CONTENT */
+        .main { margin-left:280px; width:calc(100% - 280px); padding:40px; }
 
-  /* HEADER */
-  .header {
-    background: var(--purple); color:white; padding:20px 30px; border-radius:16px;
-    display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;
-  }
-  .header h1 { font-size:24px; font-weight:600; }
-  .header .info { text-align:right; font-size:14px; }
-  .header .info b { font-size:16px; display:block; margin-top:4px; }
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            color:white; padding:25px 35px; border-radius:18px;
+            display:flex; justify-content:space-between; align-items:center; margin-bottom:35px;
+            box-shadow:0 10px 30px rgba(139,92,246,0.3);
+        }
+        .header h1 { font-size:24px; font-weight:700; }
+        .header .info { text-align:right; }
+        .header .info b { font-size:18px; display:block; margin-top:6px; }
+
 
 
   /* 4 METRIC CARDS */
@@ -79,9 +129,22 @@ $admin_name = "Cikgu Muhirman";
   /* CARD KIRI (Pelajar Terkini + Jenis Kes) */
   .left-card {
     background:white; border-radius:20px; padding:32px;
-    box-shadow:0 10px 30px rgba(139,92,246,0.1);margin-right: -115px;
+    box-shadow:0 10px 30px rgba(139,92,246,0.1);margin-right: 390px; min-height: 515px;
   }
   .left-card h3 { font-size:18px; margin-bottom:20px; font-weight:600; }
+
+  .left-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(139,92,246,0.25) !important;
+}
+
+.left-card:hover .bar-inner {
+    background: linear-gradient(90deg, #a78bfa, #ec4899) !important;
+}
+
+.left-card:hover {
+    border: 2px solid #d8b4fe;
+}
 
   table { width:100%; border-collapse:collapse; font-size:14.5px; margin-bottom:30px; }
   th { background:#f5f0ff; padding:14px 12px; text-align:left; color:#555; }
@@ -135,7 +198,7 @@ $admin_name = "Cikgu Muhirman";
 <!-- SIDEBAR (sama) -->
 <div class="sidebar">
   <div class="logo"><i class="fas fa-heart"></i>KVKaunsel</div>
-  <div class="menu-item active"><i class="fas fa-home"></i><span>Utama</span></div>
+  <div class="menu-item active"><i class="fas fa-home"></i><span>Laman Utama</span></div>
   <div class="menu-item" onclick="window.location.href='KVK_Admin_CgMuhirman_Tempahan.php'" style="cursor:pointer;">
     <i class="fas fa-book"></i>
     <span>Tempahan Pelajar</span>
@@ -184,38 +247,70 @@ $admin_name = "Cikgu Muhirman";
     </div>
   </div>
 
-  <!-- BOTTOM SECTION - LEBAR & RAPAT KANAN -->
-  <div class="bottom-grid">
-    <!-- KIRI: LEBAR -->
-    <div class="left-card">
-      <h3>Pelajar Terkini</h3>
-      <table>
-        <tr><th>Bil</th><th>Nama Pelajar</th><th>Tarikh</th><th>Jenis Kes</th><th>Status</th></tr>
-        <tr><td>1</td><td>Ahmad Daniel</td><td>29/08/2025</td><td>Akademik</td><td><span class="status processing">Sedang Diproses</span></td></tr>
-        <tr><td>2</td><td>Nur Aina</td><td>28/08/2025</td><td>Emosi</td><td><span class="status pending">Menunggu</span></td></tr>
-        <tr><td>3</td><td>Amirul Hakeem</td><td>28/08/2025</td><td>Disiplin</td><td><span class="status processing">Sedang Diproses</span></td></tr>
-      </table>
+<!-- KIRI: LEBAR - CLICKABLE TO BOOKINGS PAGE -->
+<div class="left-card" style="cursor: pointer; transition: all 0.3s ease; position: relative;" 
+     onclick="window.location.href='KVK_Admin_CgMuhirman_Tempahan.php'">
+  
+  <!-- Optional overlay for better click area and visual feedback -->
+  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 20px; pointer-events: none; 
+              box-shadow: 0 0 0 rgba(139,92,246,0); transition: box-shadow 0.3s;"></div>
 
-      <h3>Mengikut Jenis Kes</h3>
-      <div class="bar-item"><div>Akademik</div><div class="bar-outer"><div class="bar-inner" style="width:68%"></div></div><b>68%</b></div>
-      <div class="bar-item"><div>Emosi</div><div class="bar-outer"><div class="bar-inner" style="width:45%"></div></div><b>45%</b></div>
-    </div>
+  <h3>Pelajar Terkini 
+    <span style="font-size: 14px; color: #8b5cf6; float: right; font-weight: 500;">
+      Lihat Semua →
+    </span>
+  </h3>
 
-    <!-- KANAN: RAPAT KE KANAN -->
-    <div class="right-column">
-      <div class="chart-card">
-        <h3>Sasaran Bulanan</h3>
-        <div class="donut"><div class="donut-inner">82%</div></div>
-        <p style="color:#666;margin-top:8px;">258 / 315 pelajar</p>
+  <?php if(count($recent_students) > 0): ?>
+  <table>
+    <tr>
+      <th>Bil</th>
+      <th>Nama Pelajar</th>
+      <th>Ditempah Pada</th>
+      <th>Jenis Kes</th>
+      <th>Status</th>
+    </tr>
+    <?php foreach($recent_students as $i => $r): ?>
+    <tr>
+      <td><?= $i + 1 ?></td>
+      <td><b><?= htmlspecialchars($r['nama']) ?></b></td>
+      <td><?= date('d/m/Y', strtotime($r['tarikh_masa'])) ?></td>
+      <td><?= htmlspecialchars($r['jenis_kaunseling'] ?: 'Tiada') ?></td>
+      <td>
+        <span class="status <?= $r['status'] == 'Selesai' ? 'processing' : 'pending' ?>">
+          <?= $r['status'] == 'Baru' ? 'Menunggu' : htmlspecialchars($r['status']) ?>
+        </span>
+      </td>
+    </tr>
+    <?php endforeach; ?>
+  </table>
+  <?php else: ?>
+  <p style="text-align:center;color:#888;padding:40px 0;">Tiada tempahan terkini</p>
+  <?php endif; ?>
+
+  <h3>Mengikut Jenis Kes</h3>
+  <?php foreach($common_types as $type => $percent): ?>
+    <?php if($percent > 0): ?>
+    <div class="bar-item">
+      <div><?= htmlspecialchars($type) ?></div>
+      <div class="bar-outer">
+        <div class="bar-inner" style="width:<?= $percent ?>%"></div>
       </div>
-
-      <div class="chart-card">
-        <h3>Mengikut Tingkatan</h3>
-        <div class="bar-item"><div>Tingkatan 5</div><div class="bar-outer"><div class="bar-inner" style="width:48%"></div></div><b>48%</b></div>
-        <div class="bar-item"><div>Tingkatan 4</div><div class="bar-outer"><div class="bar-inner" style="width:35%"></div></div><b>35%</b></div>
-      </div>
+      <b><?= $percent ?>%</b>
     </div>
+    <?php endif; ?>
+  <?php endforeach; ?>
+
+  <!-- Optional: Small footer hint -->
+  <div style="text-align: center; margin-top: 30px; color: #999; font-size: 14px;">
+    Klik di mana-mana untuk lihat senarai penuh
   </div>
+</div>
+
+  <?php if(array_sum($common_types) == 0): ?>
+  <p style="text-align:center;color:#888;margin-top:20px;">Tiada data kes lagi</p>
+  <?php endif; ?>
+</div>
 
 </div>
 </body>

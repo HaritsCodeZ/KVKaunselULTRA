@@ -1,60 +1,73 @@
-2025-12-08 07:51:33
-Array
-(
-)
 
-
-2025-12-08 08:05:44
+2025-12-13 18:29:31
 Array
 (
     [tahap] => SVM
     [nama] => Muhammad Harits Fikri Bin Hassan
-    [program] => Program Teknologi Elektrik
+    [program] => Program Sistem Komputer Dan Rangkaian
     [semester] => Semester 1
-    [jantina] => Lelaki
-    [kaum] => Cina
-    [telefon] => 0198102444
-    [tarikh_masa] => 2025-12-05T16:06
-    [jenis_sesi] => Bersemuka
-    [jenis_kaunseling] => Kaunseling Individu
-    [kaunselor] => Tanita Anak Numpang
-    [sebab] => sdsd
-)
-
-
-2025-12-08 08:08:00
-Array
-(
-    [tahap] => DVM
-    [nama] => Nur Raudhah Amirah Binti Azman
-    [program] => Perakaunan
-    [semester] => Semester 2
     [jantina] => Lelaki
     [kaum] => Melayu
     [telefon] => 0198102444
-    [tarikh_masa] => 2025-12-09T05:09
-    [jenis_sesi] => Online
+    [tarikh_masa] => 2025-12-15T14:30
+    [jenis_sesi] => Bersemuka
     [jenis_kaunseling] => Kaunseling Individu
     [kaunselor] => Encik Muhirman Bin Mu Alim
-    [sebab] => saya stress
+    [sebab] => sasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasasa
 )
 
 
-2025-12-08 08:12:57
+2025-12-13 18:31:36
 Array
 (
     [tahap] => DVM
-    [nama] => Mohd Sharfik Bin Hamid
-    [program] => Program Sistem Komputer Dan Rangkaian
+    [nama] => Izatul Athirah Binti Abu Samah
+    [program] => Perakaunan
     [semester] => Semester 4
     [jantina] => Lelaki
     [kaum] => Melayu
-    [telefon] => 0149303688
-    [tarikh_masa] => 2025-12-10T21:30
-    [jenis_sesi] => Online
+    [telefon] => 01922029992
+    [tarikh_masa] => 2025-12-05T02:32
+    [jenis_sesi] => Bersemuka
     [jenis_kaunseling] => Kaunseling Individu
-    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
-    [sebab] => saya stress
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => Saya memerlukan sesi kaunseling ini kerana saya sedang menghadapi tekanan kerja yang melampau yang mula menjejaskan keseimbangan hidup dan kesihatan mental saya. Saya mendapati sukar untuk menguruskan kebimbangan yang berterusan, dan ini telah menyebabkan masalah tidur serta penurunan motivasi dalam aktiviti harian. Saya berharap melalui sesi kaunseling ini, saya dapat belajar teknik-teknik mengatasi tekanan yang lebih sihat, mengenal pasti punca utama kebimbangan saya, dan membina strategi yang berkesan untuk mengembalikan fokus dan ketenangan emosi agar saya dapat berfungsi dengan lebih baik dalam persekitaran profesional dan peribadi.
+)
+
+
+2025-12-13 18:33:04
+Array
+(
+    [tahap] => DVM
+    [nama] => Izatul Athirah Binti Abu Samah
+    [program] => Perakaunan
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Melayu
+    [telefon] => 0102992987
+    [tarikh_masa] => 2025-12-14T14:33
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => Saya memerlukan sesi kaunseling ini kerana saya sedang menghadapi tekanan kerja yang melampau yang mula menjejaskan keseimbangan hidup dan kesihatan mental saya. Saya mendapati sukar untuk menguruskan kebimbangan yang berterusan, dan ini telah menyebabkan masalah tidur serta penurunan motivasi dalam aktiviti harian. Saya berharap melalui sesi kaunseling ini, saya dapat belajar teknik-teknik mengatasi tekanan yang lebih sihat, mengenal pasti punca utama kebimbangan saya, dan membina strategi yang berkesan untuk mengembalikan fokus dan ketenangan emosi agar saya dapat berfungsi dengan lebih baik dalam persekitaran profesional dan peribadi.
+)
+
+
+2025-12-13 18:41:54
+Array
+(
+    [tahap] => SVM
+    [nama] => wswew
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => wewew
+    [tarikh_masa] => 2025-12-05T14:42
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => asasa
 )
 
 
