@@ -158,7 +158,7 @@
   .college-name{
   position:absolute;
   transform: translateY(559px);     /* naik = nilai negatif */
-  right:165px;
+  right:277px;
   background:rgba(0,0,0,0.4);
   backdrop-filter:blur(10px);
   padding:10px 20px;

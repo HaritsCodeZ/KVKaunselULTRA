@@ -71,3 +71,129 @@ Array
 )
 
 
+2025-12-15 07:10:04
+Array
+(
+    [tahap] => DVM
+    [nama] => Muhammad Harits Fikri Bin Hassan
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 4
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102571
+    [tarikh_masa] => 2025-12-09T16:11
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => saya ingin menyatakan bahawa saya nak berak 
+)
+
+
+2026-01-03 06:19:05
+Array
+(
+    [tahap] => DVM
+    [nama] => Muhammad Faiz Syukri
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 3
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0119220333
+    [tarikh_masa] => 2026-01-03T15:20
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => saya trauma cikgu
+)
+
+
+2026-01-03 06:54:18
+Array
+(
+    [tahap] => SVM
+    [nama] => Muhammad Harits Fikri Bin Hassan_2
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-02T02:55
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => sdsdsdsd
+)
+
+
+2026-01-03 07:10:18
+Array
+(
+    [tahap] => DVM
+    [nama] => ahmad kasim
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-22T05:13
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => sdsdssd
+)
+
+
+2026-01-03 10:18:00
+Array
+(
+    [tahap] => DVM
+    [nama] => Muhammad Harits Fikri Bin Hassan
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 4
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-03T18:18
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => Saya trauma dan inginkan sesi kaunseling segera
+)
+
+
+2026-01-03 10:38:01
+Array
+(
+    [tahap] => DVM
+    [nama] => Muhammad Akmal Fadli Bin Hassan
+    [program] => Program Hospitaliti Seni Kulinari
+    [semester] => Semester 4
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 1234567
+    [tarikh_masa] => 2026-01-03T18:38
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => asihasajsasjasaa
+)
+
+
+2026-01-03 10:46:51
+Array
+(
+    [tahap] => SVM
+    [nama] => Muhammad Kasim Bin Selamat
+    [program] => Perkaunan
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-09T06:47
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => sddsdw
+)
+
+

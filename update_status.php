@@ -9,9 +9,8 @@ if (!isset($_POST['id']) || !isset($_POST['status'])) {
 }
 
 $id = (int)$_POST['id'];
-$status = $_POST['status']; // 'Selesai' or 'Dibatalkan'
+$status = $_POST['status']; // Expected: 'Selesai' or 'Dibatalkan'
 
-// Validate status against ENUM
 $validStatuses = ['Baru', 'Dalam Proses', 'Selesai', 'Dibatalkan'];
 if (!in_array($status, $validStatuses)) {
     echo 'error: invalid status';
@@ -25,11 +24,7 @@ try {
     $stmt = $pdo->prepare("UPDATE tempahan_kaunseling SET status = ? WHERE id = ?");
     $stmt->execute([$status, $id]);
 
-    if ($stmt->rowCount() > 0) {
-        echo 'success';
-    } else {
-        echo 'error: no row updated (ID not found or same status)';
-    }
+    echo $stmt->rowCount() > 0 ? 'success' : 'error: no change';
 } catch (Exception $e) {
     echo 'error: ' . $e->getMessage();
 }

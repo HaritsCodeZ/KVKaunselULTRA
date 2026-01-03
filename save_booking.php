@@ -16,10 +16,11 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $stmt = $pdo->prepare("INSERT INTO tempahan_kaunseling 
-        (tahap,nama,program,semester,jantina,kaum,telefon,tarikh_masa,jenis_sesi,jenis_kaunseling,kaunselor,sebab) 
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+        (student_id,tahap,nama,program,semester,jantina,kaum,telefon,tarikh_masa,jenis_sesi,jenis_kaunseling,kaunselor,sebab) 
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
     $stmt->execute([
+        $_POST['student_id'] ?? '',
         $_POST['tahap'] ?? 'SVM',
         $_POST['nama'] ?? '',
         $_POST['program'] ?? '',

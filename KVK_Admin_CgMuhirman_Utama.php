@@ -203,7 +203,10 @@ foreach ($common_types as $type => $val) {
     <i class="fas fa-book"></i>
     <span>Tempahan Pelajar</span>
 </div>
-  <div class="menu-item"><i class="fas fa-envelope"></i><span>Ruang Mesej</span></div>
+  <div class="menu-item" onclick="window.location.href='KVK_Admin_CgMuhirman_Mesej.php'" style="cursor:pointer;">
+    <i class="fas fa-envelope"></i>
+    <span>Mesej Pelajar</span>
+  </div>
   <div class="menu-item"><i class="fas fa-calendar"></i><span>Temujanji</span></div>
   <div class="menu-item"><i class="fas fa-chart-bar"></i><span>Laporan</span></div>
   <div class="menu-item" style="margin-top:auto;padding-top:50px;"><i class="fas fa-sign-out-alt"></i><span>Log Keluar</span></div>
