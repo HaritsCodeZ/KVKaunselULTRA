@@ -197,3 +197,111 @@ Array
 )
 
 
+2026-01-04 04:03:12
+Array
+(
+    [tahap] => DVM
+    [nama] => Muhammad Harits Fikri Bin Hassan
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-04T00:04
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => trauma
+)
+
+
+2026-01-04 04:11:03
+Array
+(
+    [tahap] => DVM
+    [nama] => Muhammad Fikri Hashim
+    [program] => Program Teknologi Automotif
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Bumiputera
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-04T00:11
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => Saya nak tanya ni
+)
+
+
+2026-01-04 04:23:15
+Array
+(
+    [tahap] => DVM
+    [nama] => Muhammad Harits Danish
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 3
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-04T00:24
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => sdsdsds
+)
+
+
+2026-01-04 04:57:32
+Array
+(
+    [tahap] => DVM
+    [nama] => MuhammadHaritsHashim
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-04T11:58
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => ddggr
+)
+
+
+2026-01-04 06:35:58
+Array
+(
+    [tahap] => DVM
+    [nama] => sdsd
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-04T14:36
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => oiuytd
+)
+
+
+2026-01-05 08:08:24
+Array
+(
+    [tahap] => SVM
+    [nama] => Muhammad Ilyas Harun
+    [program] => Program Hospitaliti Seni Kulinari
+    [semester] => Semester 3
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0192773456
+    [tarikh_masa] => 2026-01-05T04:09
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => adsdsfgh
+)
+
+

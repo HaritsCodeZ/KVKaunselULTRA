@@ -13,6 +13,8 @@ $action   = $_POST['action'] ?? 'login';
 
 unset($_SESSION['error'], $_SESSION['error_type']);
 
+$admin_found = false; // ← ADD THIS: Fix undefined variable
+
 // ====================== 1. CEK ADMIN / KAUNSELOR DULU ======================
 if ($username && $password) {
     // Cek sama ada username wujud dalam table caunselor
@@ -29,30 +31,42 @@ if ($username && $password) {
         $pass_result = $check_pass->get_result();
 
         if ($pass_result->num_rows === 1) {
-            // LOGIN ADMIN BERJAYA
-            $_SESSION['kaunselor_id'] = $row['id'];
-            $_SESSION['kaunselor_nama'] = $row['counselor_id'];
+            // LOGIN KAUNSELOR BERJAYA
+            $admin_found = true; // ← Mark that admin was found and logged in
 
+            // Ambil nama penuh dan nama panggilan dari table caunselor
+            $detail_stmt = $conn->prepare("SELECT nama_penuh, nama_panggilan FROM caunselor WHERE id = ?");
+            $detail_stmt->bind_param("i", $row['id']);
+            $detail_stmt->execute();
+            $detail_result = $detail_stmt->get_result();
+            $detail = $detail_result->fetch_assoc();
+            $detail_stmt->close();
+
+            // Simpan semua maklumat penting dalam session
+            $_SESSION['kaunselor_id']         = $row['id'];
+            $_SESSION['kaunselor_nama']       = $row['counselor_id'];
+            $_SESSION['counselor_full_name']  = $detail['nama_penuh'];     // Important!
+            $_SESSION['counselor_short_name'] = $detail['nama_panggilan']; // For display
+
+            // Redirect ke dashboard masing-masing
             switch ($row['id']) {
                 case 1: header("Location: KVK_Admin_CgMuhirman_Utama.php"); exit;
                 case 2: header("Location: KVK_Admin_CgTanita_Utama.php"); exit;
                 case 3: header("Location: KVK_Admin_CgWhilemina_Utama.php"); exit;
                 default: header("Location: KVK_Admin_CgMuhirman_Utama.php"); exit;
             }
+            // No need to continue after redirect
         } else {
-            // Password salah untuk admin
+            // Password salah untuk kaunselor
             $_SESSION['error'] = "Kata laluan salah untuk ID Kaunselor!";
         }
         $check_pass->close();
-        $stmt->close();
-        header("Location: UltimateLoginPage.php");
-        exit;
     }
     $stmt->close();
 }
 
 // ====================== 2. KALAU BUKAN ADMIN → BARU CEK PELAJAR ======================
-if (!$admin_found) {
+if (!$admin_found) { // ← Now this works correctly
     if ($action === 'register') {
         // DAFTAR PELAJAR
         $student_id = strtoupper(trim($_POST['student_id']));
@@ -112,6 +126,7 @@ if (!$admin_found) {
     $_SESSION['error_type'] = 'login';
 }
 
+// Final fallback redirect (only reached on error)
 header("Location: UltimateLoginPage.php");
 exit;
 ?>

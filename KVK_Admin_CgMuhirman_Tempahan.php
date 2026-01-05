@@ -404,13 +404,14 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="menu-item active">
             <i class="fas fa-book-open-reader"></i><span>Tempahan Pelajar</span>
         </div>
-        
-        <div class="menu-item" onclick="window.location.href='KVK_Admin_CgMuhirman_Mesej.php'" style="cursor:pointer;">
-            <i class="fas fa-envelope"></i>
-            <span>Mesej Pelajar</span>
+
+        <div class="menu-item" onclick="location.href='KVK_Admin_CgMuhirman_Temujanji.php'">
+            <i class="fas fa-calendar-check"></i><span>Temujanji</span>
         </div>
-        <div class="menu-item"><i class="fas fa-calendar-check"></i><span>Temujanji</span></div>
-        <div class="menu-item"><i class="fas fa-chart-line"></i><span>Laporan</span></div>
+        
+         <div class="menu-item" onclick="location.href='KVK_Admin_CgMuhirman_Laporan.php'">
+            <i class="fas fa-chart-bar"></i><span>Laporan</span>
+        </div>
         
         <div class="menu-item" style="margin-top:auto;padding-top:60px;" onclick="if(confirm('Log keluar?')) location.href='logout.php'">
             <i class="fas fa-sign-out-alt"></i><span>Log Keluar</span>

@@ -241,15 +241,6 @@ if (basename($_SERVER['PHP_SELF']) === 'UltimateLoginPage.php') {
         <?php if(isset($_SESSION['student_id']) && !empty($_SESSION['student_id'])): 
             $sid = strtoupper($_SESSION['student_id']);
         ?>
-            <!-- MESSAGE ICON - Direct link to messaging -->
-            <a href="KVK_Student_Message.php" class="icon-btn" title="Ruang Mesej">
-                <svg viewBox="0 0 24 24">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                    <polyline points="22,6 12,13 2,6"/>
-                </svg>
-                <!-- Optional badge - uncomment when you add unread count -->
-                <!-- <span class="notification-badge">3</span> -->
-            </a>
 
             <!-- PROFILE DROPDOWN -->
             <div class="nav-item">
