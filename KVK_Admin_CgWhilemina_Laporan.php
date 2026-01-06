@@ -1,62 +1,78 @@
 <?php
 session_start();
 
-// Redirect if not logged in
-if (!isset($_SESSION['kaunselor_id'])) {
+// Security: Only Whilemina can access
+if (!isset($_SESSION['kaunselor_id']) || $_SESSION['counselor_full_name'] !== 'Whilemina Thimah Gregory Anak Jimbun') {
     header("Location: UltimateLoginPage.php");
     exit;
 }
 
-$admin_name = $_SESSION['counselor_short_name'] ?? $_SESSION['counselor_full_name'] ?? "Cikgu Muhirman";
+$admin_name = $_SESSION['counselor_short_name'] ?? "Cg. Whilemina";
 
-// Database connection
-$pdo = new PDO("mysql:host=localhost;dbname=kvkaunsel_db", "root", "");
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+try {
+    $pdo = new PDO("mysql:host=localhost;dbname=kvkaunsel_db", "root", "");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Sambungan pangkalan data gagal: " . $e->getMessage());
+}
 
-// Base condition for accepted bookings only
-$accepted_where = "WHERE status = 'Selesai'";
+$kaunselor = 'Whilemina Thimah Gregory Anak Jimbun';
+$accepted_where = "WHERE status = 'Selesai' AND kaunselor = ?";
 
-// Total Accepted Bookings
-$total_accepted = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling $accepted_where")->fetchColumn();
+// Total Accepted Bookings for Whilemina
+$stmt_total = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling $accepted_where");
+$stmt_total->execute([$kaunselor]);
+$total_accepted = $stmt_total->fetchColumn();
 
-// SVM vs DVM Breakdown
-$svm_count = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling $accepted_where AND tahap = 'SVM'")->fetchColumn();
-$dvm_count = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling $accepted_where AND tahap = 'DVM'")->fetchColumn();
+// SVM vs DVM Breakdown for Whilemina
+$stmt_svm = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling $accepted_where AND tahap = 'SVM'");
+$stmt_svm->execute([$kaunselor]);
+$svm_count = $stmt_svm->fetchColumn();
 
-// Monthly Trend (Last 12 months)
+$stmt_dvm = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling $accepted_where AND tahap = 'DVM'");
+$stmt_dvm->execute([$kaunselor]);
+$dvm_count = $stmt_dvm->fetchColumn();
+
+// Monthly Trend (Last 12 months) for Whilemina
 $monthly_sql = "
     SELECT DATE_FORMAT(tarikh_masa, '%Y-%m') AS bulan, 
            COUNT(*) AS jumlah
     FROM tempahan_kaunseling
-    $accepted_where
+    WHERE kaunselor = ?
+      AND status = 'Selesai'
       AND tarikh_masa >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
     GROUP BY bulan
     ORDER BY bulan ASC
 ";
-$monthly_data = $pdo->query($monthly_sql)->fetchAll(PDO::FETCH_KEY_PAIR); // 'YYYY-MM' => count
+$stmt_monthly = $pdo->prepare($monthly_sql);
+$stmt_monthly->execute([$kaunselor]);
+$monthly_data = $stmt_monthly->fetchAll(PDO::FETCH_KEY_PAIR); // 'YYYY-MM' => count
 
 // Prepare labels and data for chart (oldest → newest)
 $months = [];
 $counts = [];
 for ($i = 11; $i >= 0; $i--) {
     $date = date('Y-m', strtotime("-$i months"));
-    $months[] = date('M Y', strtotime($date)); // e.g., Jan 2025
+    $months[] = date('M Y', strtotime($date)); // e.g., Jan 2026
     $counts[] = $monthly_data[$date] ?? 0;
 }
 
-// Top Jenis Kaunseling (Popular types)
-$top_jenis = $pdo->query("
+// Top Jenis Kaunseling for Whilemina
+$top_jenis = $pdo->prepare("
     SELECT jenis_kaunseling, COUNT(*) AS jumlah
     FROM tempahan_kaunseling
-    $accepted_where
+    WHERE kaunselor = ?
+      AND status = 'Selesai'
       AND jenis_kaunseling IS NOT NULL
       AND jenis_kaunseling != ''
     GROUP BY jenis_kaunseling
     ORDER BY jumlah DESC
     LIMIT 6
-")->fetchAll(PDO::FETCH_ASSOC);
+");
+$top_jenis->execute([$kaunselor]);
+$top_jenis = $top_jenis->fetchAll(PDO::FETCH_ASSOC);
 
-// Calculate most common jenis kaunseling percentage for the stats card
+// Most common jenis percentage
 $most_common_percent = 0;
 $most_common_jenis = 'Tiada Data';
 if ($total_accepted > 0 && !empty($top_jenis)) {
@@ -65,14 +81,16 @@ if ($total_accepted > 0 && !empty($top_jenis)) {
     $most_common_jenis = $top_jenis[0]['jenis_kaunseling'];
 }
 
-// Recent 10 Accepted Bookings
-$recent = $pdo->query("
+// Recent 10 Accepted Bookings for Whilemina
+$recent = $pdo->prepare("
     SELECT nama, tahap, tarikh_masa, kaunselor
     FROM tempahan_kaunseling
-    $accepted_where
+    WHERE kaunselor = ? AND status = 'Selesai'
     ORDER BY tarikh_masa DESC
     LIMIT 10
-")->fetchAll(PDO::FETCH_ASSOC);
+");
+$recent->execute([$kaunselor]);
+$recent = $recent->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -80,7 +98,7 @@ $recent = $pdo->query("
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin KVKaunsel - Laporan</title>
+    <title>KVKaunsel - Laporan (Cg. Whilemina)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -188,7 +206,6 @@ $recent = $pdo->query("
         .menu-item-profile:hover { background: rgba(255,255,255,0.15); }
         .menu-item-profile i { width: 36px; font-size: 17px; text-align: center; }
 
-        /* MENU ITEMS - USING <a> TAGS */
         .menu-item {
             display: flex;
             align-items: center;
@@ -374,7 +391,7 @@ $recent = $pdo->query("
 </head>
 <body>
 
-<!-- SIDEBAR WITH PROPER <a> LINKS -->
+<!-- SIDEBAR -->
 <div class="sidebar">
     <div class="profile-section" id="profileDropdown">
         <div class="profile-avatar">
@@ -398,16 +415,16 @@ $recent = $pdo->query("
         </div>
     </div>
 
-    <a href="KVK_Admin_CgMuhirman_Utama.php" class="menu-item <?= basename($_SERVER['PHP_SELF']) == 'KVK_Admin_CgMuhirman_Utama.php' ? 'active' : '' ?>">
+    <a href="KVK_Admin_CgWhilemina_Utama.php" class="menu-item <?= basename($_SERVER['PHP_SELF']) == 'KVK_Admin_CgWhilemina_Utama.php' ? 'active' : '' ?>">
         <i class="fas fa-home"></i><span>Laman Utama</span>
     </a>
-    <a href="KVK_Admin_CgMuhirman_Tempahan.php" class="menu-item <?= basename($_SERVER['PHP_SELF']) == 'KVK_Admin_CgMuhirman_Tempahan.php' ? 'active' : '' ?>">
+    <a href="KVK_Admin_CgWhilemina_Tempahan.php" class="menu-item <?= basename($_SERVER['PHP_SELF']) == 'KVK_Admin_CgWhilemina_Tempahan.php' ? 'active' : '' ?>">
         <i class="fas fa-book-open-reader"></i><span>Tempahan Pelajar</span>
     </a>
-    <a href="KVK_Admin_CgMuhirman_Temujanji.php" class="menu-item <?= basename($_SERVER['PHP_SELF']) == 'KVK_Admin_CgMuhirman_Temujanji.php' ? 'active' : '' ?>">
+    <a href="KVK_Admin_CgWhilemina_Temujanji.php" class="menu-item <?= basename($_SERVER['PHP_SELF']) == 'KVK_Admin_CgWhilemina_Temujanji.php' ? 'active' : '' ?>">
         <i class="fas fa-calendar-check"></i><span>Temujanji</span>
     </a>
-    <a href="KVK_Admin_CgMuhirman_Laporan.php" class="menu-item active">
+    <a href="KVK_Admin_CgWhilemina_Laporan.php" class="menu-item active">
         <i class="fas fa-chart-line"></i><span>Laporan</span>
     </a>
 </div>
@@ -600,7 +617,7 @@ $recent = $pdo->query("
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Profile dropdown
+    // Profile dropdown and password modal (same as before)
     const profileDropdown = document.getElementById('profileDropdown');
     const profileMenu = document.getElementById('profileMenu');
 
@@ -617,7 +634,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Password modal functions
     window.openChangePasswordModal = function() {
         document.getElementById('passwordModal').style.display = 'flex';
         document.getElementById('profileMenu').style.display = 'none';
@@ -645,7 +661,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // Chart
+    // Monthly Chart
     const ctx = document.getElementById('monthlyChart').getContext('2d');
     new Chart(ctx, {
         type: 'line',

@@ -1,65 +1,81 @@
 <?php
 session_start();
 
-// Redirect if not logged in
-if (!isset($_SESSION['kaunselor_id'])) {
+// Security: Only Whilemina can access
+if (!isset($_SESSION['kaunselor_id']) || $_SESSION['counselor_full_name'] !== 'Whilemina Thimah Gregory Anak Jimbun') {
     header("Location: UltimateLoginPage.php");
     exit;
 }
 
-$admin_name = $_SESSION['counselor_short_name'] ?? $_SESSION['counselor_full_name'] ?? "Cikgu Muhirman";
+$admin_name = $_SESSION['counselor_short_name'] ?? "Cg. Whilemina";
 
-// Database connection
 try {
     $pdo = new PDO("mysql:host=localhost;dbname=kvkaunsel_db", "root", "");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
+} catch (PDOException $e) {
+    die("Sambungan pangkalan data gagal: " . $e->getMessage());
 }
 
-// === REAL PUBLIC HOMEPAGE VISIT COUNTER ===
-try {
-    $total_kunjungan = $pdo->query("SELECT COUNT(*) FROM page_visits")->fetchColumn();
-    $kunjungan_hari_ini = $pdo->query("SELECT COUNT(*) FROM page_visits WHERE visit_date = CURDATE()")->fetchColumn();
-    $kunjungan_bulan_ini = $pdo->query("
-        SELECT COUNT(*) FROM page_visits 
-        WHERE YEAR(visit_date) = YEAR(CURDATE()) 
-          AND MONTH(visit_date) = MONTH(CURDATE())
-    ")->fetchColumn();
-} catch (Exception $e) {
-    $total_kunjungan = 0;
-    $kunjungan_hari_ini = 0;
-    $kunjungan_bulan_ini = 0;
-}
+$approved_status = 'Selesai';
+$counselor_full  = 'Whilemina Thimah Gregory Anak Jimbun';
 
-// === PELAJAR BARU: Total registered students only ===
-try {
-    $total_pelajar_baru = $pdo->query("SELECT COUNT(*) FROM students")->fetchColumn();
-} catch (Exception $e) {
-    $total_pelajar_baru = 0;
-}
-
-// Latest 5 bookings — GLOBAL (all counselors)
-$recent_students = $pdo->query("
-    SELECT nama, tarikh_masa, jenis_kaunseling, status, tarikh_tempahan
+// Fetch approved bookings for Whilemina only
+$stmt = $pdo->prepare("
+    SELECT id, nama, tarikh_masa, jenis_kaunseling, program, semester 
     FROM tempahan_kaunseling 
-    ORDER BY tarikh_tempahan DESC 
-    LIMIT 5
-")->fetchAll(PDO::FETCH_ASSOC);
+    WHERE kaunselor = ? AND status = ?
+    ORDER BY tarikh_masa
+");
+$stmt->execute([$counselor_full, $approved_status]);
+$bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Counseling metrics — GLOBAL
-$total_sesi_selesai = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling WHERE status = 'Selesai'")->fetchColumn();
-$kes_aktif = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling WHERE status != 'Selesai'")->fetchColumn();
+// Today's approved appointments count for Whilemina
+$today_stmt = $pdo->prepare("
+    SELECT COUNT(*) FROM tempahan_kaunseling 
+    WHERE DATE(tarikh_masa) = CURDATE() 
+      AND kaunselor = ? AND status = ?
+");
+$today_stmt->execute([$counselor_full, $approved_status]);
+$today_count = $today_stmt->fetchColumn();
+
+// Build FullCalendar events
+$events = [];
+$colors = ['#ff9ff3', '#feca57', '#48dbfb', '#1dd1a1', '#54a0ff', '#ff6b6b', '#c8d6e5'];
+$color_index = 0;
+
+foreach ($bookings as $booking) {
+    $start = $booking['tarikh_masa'];
+    $end = date('Y-m-d H:i:s', strtotime($start . ' +1 hour'));
+    $timeDisplay = date('h:i A', strtotime($start));
+
+    $events[] = [
+        'id' => $booking['id'],
+        'title' => '',
+        'start' => $start,
+        'end' => $end,
+        'backgroundColor' => $colors[$color_index % count($colors)],
+        'borderColor' => $colors[$color_index % count($colors)],
+        'textColor' => '#2d3436',
+        'extendedProps' => [
+            'nama' => $booking['nama'],
+            'waktu' => $timeDisplay,
+            'jenis' => $booking['jenis_kaunseling'] ?: 'Umum',
+            'program_sem' => $booking['program'] . ' Sem ' . $booking['semester']
+        ]
+    ];
+    $color_index++;
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
-    <title>KVKaunsel - Laman Utama</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KVKaunsel - Temujanji (Cg. Whilemina)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
     <style>
         :root {
             --purple: #8b5cf6;
@@ -68,13 +84,7 @@ $kes_aktif = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling WHERE status 
             --light: #f8f9ff;
         }
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background:var(--light); 
-            display:flex; 
-            color:#333; 
-            min-height:100vh; 
-        }
+        body { font-family: 'Inter', sans-serif; background:var(--light); display:flex; color:#333; min-height:100vh; }
 
         /* SIDEBAR */
         .sidebar {
@@ -89,7 +99,6 @@ $kes_aktif = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling WHERE status 
             flex-direction: column;
         }
 
-        /* PROFILE SECTION */
         .profile-section {
             display: flex;
             flex-direction: column;
@@ -169,94 +178,101 @@ $kes_aktif = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling WHERE status 
         .menu-item-profile:hover { background: rgba(255,255,255,0.15); }
         .menu-item-profile i { width: 36px; font-size: 17px; text-align: center; }
 
-        /* MENU ITEMS */
         .menu-item {
             display: flex;
             align-items: center;
             padding: 16px 20px;
             border-radius: 14px;
             margin-bottom: 10px;
-            cursor: pointer;
-            transition: 0.3s;
             font-weight: 600;
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
         }
         .menu-item:hover { background: rgba(255,255,255,0.15); }
         .menu-item.active { background: rgba(255,255,255,0.25); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
         .menu-item i { width: 40px; font-size: 19px; text-align: center; }
         .menu-item span { margin-left: 16px; font-size: 15.5px; }
 
-        /* MAIN CONTENT */
-        .main { 
-            margin-left: 280px; 
-            width: calc(100% - 280px); 
-            padding: 40px; 
-            overflow-y: auto;
-        }
+        .main { margin-left:280px; width:calc(100% - 280px); padding:40px; }
 
         .header {
             background: linear-gradient(135deg, var(--purple), var(--pink));
-            color: white;
-            padding: 25px 35px;
-            border-radius: 18px;
+            color:white; padding:25px 35px; border-radius:18px;
+            display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;
+            box-shadow:0 15px 40px rgba(139,92,246,0.3);
+        }
+        .header h1 { font-size:28px; font-weight:700; }
+        .header p { font-size:16px; opacity:0.9; margin-top:6px; }
+        .header .info { text-align:right; background:rgba(255,255,255,0.15); padding:12px 20px; border-radius:12px; }
+        .header .info div { font-size:14px; }
+        .header .info b { font-size:32px; display:block; margin-top:4px; }
+
+        #calendar {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .fc { font-family: 'Inter', sans-serif; }
+        .fc-toolbar-title { font-size: 28px !important; font-weight: 700; color: var(--darkpurple); }
+        .fc-button { background: var(--purple) !important; border: none !important; border-radius: 12px !important; padding: 10px 20px !important; font-weight: 600 !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(139,92,246,0.3) !important; }
+        .fc-button:hover { background: var(--pink) !important; transform: translateY(-3px) !important; box-shadow: 0 10px 25px rgba(236,72,153,0.4) !important; }
+        .fc-button.fc-today-button { background: #10b981 !important; color: white !important; }
+
+        .fc-daygrid-day { transition: all 0.4s ease; border-radius: 12px; margin: 4px; background: #ffffff; }   
+        .fc-daygrid-day:hover { transform: scale(1.05) translateY(-5px); box-shadow: 0 15px 35px rgba(139,92,246,0.2); z-index: 10; background: linear-gradient(135deg, #b43398ff, #ffffff); }
+
+        .fc-day-today {
+            background: linear-gradient(90deg, var(--purple), var(--pink), var(--purple)) !important;
+            background-size: 200% 200% !important;
+            animation: waveFlow 8s ease infinite !important;
+            color: white !important; font-weight: bold; text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            position: relative; overflow: hidden;
+        }
+        .fc-day-today::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shine 8s ease infinite;
+        }
+        @keyframes waveFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes shine { 0% { left: -100%; } 50% { left: 100%; } 100% { left: 100%; } }
+
+        .fc-daygrid-event {
+            height: 10px !important;
+            width: 10px !important;
+            border-radius: 50% !important;
+            margin: 3px 5px !important;
+            padding: 0 !important;
+            font-size: 0 !important;
+            border: none !important;
+        }
+
+        .fc-daygrid-event-harness {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 35px;
-            box-shadow: 0 10px 30px rgba(139,92,246,0.3);
-        }
-        .header h1 { font-size: 24px; font-weight: 700; }
-        .header .info { text-align: right; }
-        .header .info b { font-size: 18px; display: block; margin-top: 6px; }
-
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
-            gap: 24px; 
-            margin-bottom: 40px; 
-        }
-        .metric-card {
-            background: white;
-            border-radius: 20px;
-            padding: 24px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(139,92,246,0.1);
-        }
-        .metric-card .icon-circle {
-            width: 80px; height: 80px; border-radius: 50%;
-            background: linear-gradient(135deg, #8b5cf6, #ec4899);
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 16px;
-            font-size: 32px; color: white;
-        }
-        .metric-card h3 { font-size: 14px; color: #888; margin-bottom: 8px; }
-        .metric-card .number { font-size: 36px; font-weight: 700; margin: 8px 0; }
-        .metric-card .change { font-size: 13px; line-height: 1.5; }
-        .positive { color: #10b981; }
-        .new-student { background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; }
-        .new-student .number, .new-student h3 { color: white; }
-
-        .left-card {
-            background: white;
-            border-radius: 20px;
-            padding: 32px;
-            box-shadow: 0 10px 30px rgba(139,92,246,0.1);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-height: 520px;
-        }
-        .left-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(139,92,246,0.25);
+            justify-content: center;
+            flex-wrap: wrap;
+            padding-bottom: 4px;
         }
 
-        table { width: 100%; border-collapse: collapse; font-size: 14.5px; margin: 30px 0; }
-        th { background: #f5f0ff; padding: 14px 12px; text-align: left; color: #555; }
-        td { padding: 14px 12px; border-bottom: 1px solid #eee; }
-        .status { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-        .processing { background: #dbeafe; color: #1e40af; }
-        .pending { background: #fef3c7; color: #92400e; }
+        .fc-daygrid-day.fc-day:has(.fc-event) {
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(139, 92, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+        }
 
-        /* MODAL */
+        .fc-col-header-cell {
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            color: white; font-weight: 600; padding: 16px; border-radius: 12px 12px 0 0;
+        }
+
+        /* PASSWORD MODAL STYLES */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
@@ -304,12 +320,6 @@ $kes_aktif = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling WHERE status 
         .btn-cancel { background: #eee; color: #666; }
         .btn-save { background: var(--purple); color: white; }
         .btn-save:hover { background: #7c4dff; }
-
-        @media (max-width: 1200px) { .grid { grid-template-columns: 1fr 1fr; } }
-        @media (max-width: 768px) {
-            .sidebar { width: 100%; height: auto; position: relative; }
-            .main { margin-left: 0; width: 100%; }
-        }
     </style>
 </head>
 <body>
@@ -338,21 +348,18 @@ $kes_aktif = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling WHERE status 
         </div>
     </div>
 
-    <div class="menu-item <?= basename($_SERVER['PHP_SELF']) == 'KVK_Admin_CgMuhirman_Utama.php' ? 'active' : '' ?>">
+    <a href="KVK_Admin_CgWhilemina_Utama.php" class="menu-item <?= basename($_SERVER['PHP_SELF']) == 'KVK_Admin_CgWhilemina_Utama.php' ? 'active' : '' ?>">
         <i class="fas fa-home"></i><span>Laman Utama</span>
-    </div>
-    <div class="menu-item <?= basename($_SERVER['PHP_SELF']) == 'KVK_Admin_CgMuhirman_Tempahan.php' ? 'active' : '' ?>"
-         onclick="location.href='KVK_Admin_CgMuhirman_Tempahan.php'">
+    </a>
+    <a href="KVK_Admin_CgWhilemina_Tempahan.php" class="menu-item <?= basename($_SERVER['PHP_SELF']) == 'KVK_Admin_CgWhilemina_Tempahan.php' ? 'active' : '' ?>">
         <i class="fas fa-book-open-reader"></i><span>Tempahan Pelajar</span>
-    </div>
-    <div class="menu-item <?= basename($_SERVER['PHP_SELF']) == 'KVK_Admin_CgMuhirman_Temujanji.php' ? 'active' : '' ?>"
-         onclick="location.href='KVK_Admin_CgMuhirman_Temujanji.php'">
+    </a>
+    <a href="KVK_Admin_CgWhilemina_Temujanji.php" class="menu-item active">
         <i class="fas fa-calendar-check"></i><span>Temujanji</span>
-    </div>
-    <div class="menu-item <?= basename($_SERVER['PHP_SELF']) == 'KVK_Admin_CgMuhirman_Laporan.php' ? 'active' : '' ?>"
-         onclick="location.href='KVK_Admin_CgMuhirman_Laporan.php'">
+    </a>
+    <a href="KVK_Admin_CgWhilemina_Laporan.php" class="menu-item <?= basename($_SERVER['PHP_SELF']) == 'KVK_Admin_CgWhilemina_Laporan.php' ? 'active' : '' ?>">
         <i class="fas fa-chart-line"></i><span>Laporan</span>
-    </div>
+    </a>
 </div>
 
 <!-- PASSWORD MODAL -->
@@ -396,83 +403,31 @@ $kes_aktif = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling WHERE status 
 <!-- MAIN CONTENT -->
 <div class="main">
     <div class="header">
-        <h1>KVKaunsel - Utama</h1>
+        <div>
+            <h1>Temujanji Kaunseling</h1>
+            <p>• Menunjukkan jumlah sesi kaunseling anda hari ini!</p>
+        </div>
         <div class="info">
-            Selamat Datang!<br>
-            <b>Panel Kaunselor: <?= htmlspecialchars($admin_name) ?></b>
+            <div>Temujanji Hari Ini</div>
+            <b><?= $today_count ?></b>
         </div>
     </div>
 
-    <div class="grid">
-        <div class="metric-card">
-            <div class="icon-circle"><i class="fas fa-users"></i></div>
-            <h3>Jumlah Kunjungan</h3>
-            <div class="number"><?= number_format($total_kunjungan) ?></div>
-            <div class="change positive">
-                Hari ini: <?= number_format($kunjungan_hari_ini) ?> kunjungan<br>
-                Bulan ini: <?= number_format($kunjungan_bulan_ini) ?> kunjungan
-            </div>
+    <?php if (empty($events)): ?>
+        <div style="text-align:center; padding:40px; color:#666; font-size:18px;">
+            Tiada temujanji yang diluluskan lagi.<br>
+            Selepas anda meluluskan tempahan pelajar, ia akan muncul di sini secara automatik.
         </div>
-        <div class="metric-card">
-            <div class="icon-circle"><i class="fas fa-calendar-check"></i></div>
-            <h3>Jumlah Sesi</h3>
-            <div class="number"><?= number_format($total_sesi_selesai) ?></div>
-            <div class="change">Sesi yang telah selesai</div>
-        </div>
-        <div class="metric-card">
-            <div class="icon-circle"><i class="fas fa-folder-open"></i></div>
-            <h3>Kes Aktif</h3>
-            <div class="number"><?= number_format($kes_aktif) ?></div>
-            <div class="change positive">Belum selesai / menunggu</div>
-        </div>
-        <div class="metric-card new-student">
-            <div class="icon-circle"><i class="fas fa-user-plus"></i></div>
-            <h3>Pelajar Baru</h3>
-            <div class="number"><?= number_format($total_pelajar_baru) ?></div>
-            <div class="change">Jumlah pelajar berdaftar</div>
-        </div>
-    </div>
+    <?php endif; ?>
 
-    <div class="left-card" onclick="window.location.href='KVK_Admin_CgMuhirman_Tempahan.php'">
-        <h3>Pelajar Terkini 
-            <span style="font-size: 14px; color: #8b5cf6; float: right; font-weight: 500;">Lihat Semua →</span>
-        </h3>
-
-        <?php if(count($recent_students) > 0): ?>
-        <table>
-            <tr>
-                <th>Bil</th>
-                <th>Nama Pelajar</th>
-                <th>Ditempah Pada</th>
-                <th>Jenis Kes</th>
-                <th>Status</th>
-            </tr>
-            <?php foreach($recent_students as $i => $r): ?>
-            <tr>
-                <td><?= $i + 1 ?></td>
-                <td><b><?= htmlspecialchars($r['nama']) ?></b></td>
-                <td><?= date('d/m/Y', strtotime($r['tarikh_tempahan'])) ?></td>
-                <td><?= htmlspecialchars($r['jenis_kaunseling'] ?: 'Tiada') ?></td>
-                <td>
-                    <span class="status <?= $r['status'] == 'Selesai' ? 'processing' : 'pending' ?>">
-                        <?= $r['status'] == 'Baru' ? 'Menunggu' : htmlspecialchars($r['status']) ?>
-                    </span>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-        <?php else: ?>
-        <p style="text-align:center;color:#888;padding:60px 0;">Tiada tempahan terkini</p>
-        <?php endif; ?>
-
-        <div style="text-align: center; margin-top: 40px; color: #999; font-size: 14px;">
-            Klik di mana-mana untuk lihat senarai penuh
-        </div>
-    </div>
+    <div id="calendar"></div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/ms.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Profile dropdown
     const profileDropdown = document.getElementById('profileDropdown');
     const profileMenu = document.getElementById('profileMenu');
 
@@ -489,6 +444,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Password modal functions
     window.openChangePasswordModal = function() {
         document.getElementById('passwordModal').style.display = 'flex';
         document.getElementById('profileMenu').style.display = 'none';
@@ -516,32 +472,61 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    document.getElementById('changePassForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const messageDiv = document.getElementById('passwordMessage');
-        const data = new FormData(this);
+    // FullCalendar initialization
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        height: 'auto',
+        locale: 'ms',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        buttonText: {
+            today: 'Hari Ini',
+            month: 'Bulan',
+            week: 'Minggu',
+            day: 'Hari'
+        },
+        events: <?= json_encode($events) ?>,
 
-        fetch('change_admin_pass.php', {
-            method: 'POST',
-            body: data,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.json())
-        .then(result => {
-            messageDiv.style.color = result.success ? '#10b981' : '#ef4444';
-            messageDiv.innerHTML = result.message;
+        eventDidMount: function(info) {
+            info.el.title = info.event.extendedProps.nama + ' • ' + 
+                            info.event.extendedProps.waktu + '\n' +
+                            info.event.extendedProps.jenis + ' (' + 
+                            info.event.extendedProps.program_sem + ')';
+        },
 
-            if (result.success) {
-                setTimeout(closePasswordModal, 2000);
+        eventClick: function(info) {
+            alert(
+                'Pelajar: ' + info.event.extendedProps.nama + '\n' +
+                'Masa: ' + info.event.extendedProps.waktu + '\n' +
+                'Jenis: ' + info.event.extendedProps.jenis + '\n' +
+                'Program: ' + info.event.extendedProps.program_sem
+            );
+        },
+
+        dateClick: function(info) {
+            var eventsOnDay = calendar.getEvents().filter(function(ev) {
+                return ev.start && ev.start.toISOString().slice(0, 10) === info.dateStr;
+            });
+
+            if (eventsOnDay.length === 0) {
+                alert('Tiada temujanji pada ' + info.dateStr);
+                return;
             }
-        })
-        .catch(() => {
-            messageDiv.style.color = '#ef4444';
-            messageDiv.innerHTML = 'Ralat sambungan. Sila cuba lagi.';
-        });
+
+            var message = 'Temujanji pada ' + info.dateStr + ':\n\n';
+            eventsOnDay.forEach(function(ev) {
+                message += '• ' + ev.extendedProps.nama + '\n';
+                message += '  Masa: ' + ev.extendedProps.waktu + '\n\n';
+            });
+            alert(message);
+        }
     });
+
+    calendar.render();
 });
 </script>
 

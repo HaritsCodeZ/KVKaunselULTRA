@@ -1,4 +1,21 @@
-<?php session_start(); ?>
+<?php session_start(); 
+
+// === OPTION 2: Count EVERY single page load (perfect for local testing) ===
+try {
+    $pdo = new PDO("mysql:host=localhost;dbname=kvkaunsel_db", "root", "");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $stmt = $pdo->prepare("
+        INSERT INTO page_visits (visit_date, visit_time, ip_address, user_agent) 
+        VALUES (CURDATE(), NOW(), ?, ?)
+    ");
+    $stmt->execute([$_SERVER['REMOTE_ADDR'] ?? 'unknown', $_SERVER['HTTP_USER_AGENT'] ?? 'unknown']);
+} catch (Exception $e) {
+    // Silently fail - won't break your beautiful page
+    error_log("Visit counter failed: " . $e->getMessage());
+}
+// === End of visit counter ===
+?>
 <!doctype html>
 <html lang="ms">
 <head>

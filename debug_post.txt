@@ -305,3 +305,292 @@ Array
 )
 
 
+2026-01-06 07:06:13
+Array
+(
+    [tahap] => SVM
+    [nama] => Nur Amelia Putri
+    [program] => Program Hospitaliti Seni Kulinari
+    [semester] => Semester 4
+    [jantina] => Lelaki
+    [kaum] => Bumiputera
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-06T15:06
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 123erfgh
+)
+
+
+2026-01-06 08:21:15
+Array
+(
+    [tahap] => SVM
+    [nama] => Nureen
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 3
+    [jantina] => Perempuan
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T16:21
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => saya dalam kemurungan ibu saya sakit,ayah sakit dan 1 keluarga dalam trauma
+
+)
+
+
+2026-01-06 08:21:50
+Array
+(
+    [tahap] => DVM
+    [nama] => akim
+    [program] => Program Teknologi Kimpalan
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-06T15:22
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => saya trauma mak ayah nenek datuk abang adik sakit
+)
+
+
+2026-01-06 08:22:58
+Array
+(
+    [tahap] => DVM
+    [nama] => er
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Bumiputera
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-06T16:23
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => asadfghjk
+)
+
+
+2026-01-06 08:38:39
+Array
+(
+    [tahap] => DVM
+    [nama] => 1234
+    [program] => Perakaunan
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-05T04:39
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 12345tr
+)
+
+
+2026-01-06 08:39:01
+Array
+(
+    [tahap] => DVM
+    [nama] => 123r4
+    [program] => Perakaunan
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 2345
+    [tarikh_masa] => 2026-01-22T19:42
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 1234
+)
+
+
+2026-01-06 08:39:23
+Array
+(
+    [tahap] => SVM
+    [nama] => wef
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Bumiputera
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-15T04:39
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 12345
+)
+
+
+2026-01-06 08:43:13
+Array
+(
+    [tahap] => SVM
+    [nama] => e2rq3tweg4yt
+    [program] => Program Teknologi Pemesinan Industri
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Bumiputera
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-15T05:45
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 1234frt4gy3g
+)
+
+
+2026-01-06 08:59:18
+Array
+(
+    [tahap] => DVM
+    [nama] => asdf
+    [program] => Perakaunan
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-13T16:00
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => asdfghj
+)
+
+
+2026-01-06 08:59:39
+Array
+(
+    [tahap] => DVM
+    [nama] => asdfrteryjuky
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-06T08:04
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => wsdaefrtjuklijyhte
+)
+
+
+2026-01-06 09:00:06
+Array
+(
+    [tahap] => SVM
+    [nama] => swqdertyyhre
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-30T15:59
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 2wqe2eq1eqeQ
+)
+
+
+2026-01-06 09:00:24
+Array
+(
+    [tahap] => SVM
+    [nama] => EQE3T4YRDHETHCTUJSEYTES
+    [program] => Perkaunan
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Bumiputera
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-07T17:01
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => QEWQEWW
+)
+
+
+2026-01-06 09:32:35
+Array
+(
+    [tahap] => DVM
+    [nama] => try1
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-06T17:33
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 123456789
+)
+
+
+2026-01-06 09:32:59
+Array
+(
+    [tahap] => DVM
+    [nama] => try2
+    [program] => Perakaunan
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-06T18:34
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 12345689opoulikyjhtgr
+)
+
+
+2026-01-06 09:34:10
+Array
+(
+    [tahap] => SVM
+    [nama] => 123456
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-06T23:40
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 2we2rxfgr
+)
+
+
+2026-01-06 09:34:36
+Array
+(
+    [tahap] => SVM
+    [nama] => try4
+    [program] => Program Teknologi Pemesinan Industri
+    [semester] => Semester 3
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-06T22:40
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => e2445435
+)
+
+
