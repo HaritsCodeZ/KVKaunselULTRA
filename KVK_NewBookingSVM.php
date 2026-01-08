@@ -450,7 +450,11 @@ function nextStep(n) {
 // INI FUNGSI YANG AKAN HANTAR DATA KE DATABASE
 function submitBooking() {
     const f = new FormData();
-    f.append('tahap', 'SVM'); // tukar ke 'DVM' kalau guna form DVM
+    
+    // Tambah student_id dari session (hidden input yang PHP generate)
+    f.append('student_id', '<?php echo $_SESSION['student_id'] ?? ''; ?>');  // <-- Ini yang hilang!
+    
+    f.append('tahap', 'SVM');  // atau 'DVM' untuk file DVM
     f.append('nama', document.querySelector('#step1 input[name="nama"]').value);
     f.append('program', document.querySelector('#step1 select[name="program"]').value);
     f.append('semester', document.querySelector('#step1 select[name="semester"]').value);
@@ -459,8 +463,8 @@ function submitBooking() {
     f.append('telefon', document.querySelector('#step2 input[name="telefon"]').value);
     f.append('tarikh_masa', document.querySelector('#step3 input[name="tarikh_masa"]').value);
     f.append('jenis_sesi', document.querySelector('#step3 select[name="jenis_sesi"]').value);
-    f.append('jenis_kaunseling', document.querySelector('#step3 select[name="JenisKaunseling"]').value); // nama besar
-    f.append('kaunselor', document.querySelector('#step4 select[name="JenisKaunseling"]').value); // nama sama
+    f.append('jenis_kaunseling', document.querySelector('#step3 select[name="JenisKaunseling"]').value);
+    f.append('kaunselor', document.querySelector('#step4 select[name="JenisKaunseling"]').value);  // kaunselor pilih
     f.append('sebab', document.querySelector('#step4 textarea[name="sebab"]').value);
 
     fetch('save_booking.php', {
@@ -470,16 +474,16 @@ function submitBooking() {
     .then(r => r.json())
     .then(res => {
         if(res.success) {
-            // Tunjuk success screen
+            // Success screen
             document.querySelector('.greeting').style.display = 'none';
             document.querySelector('.sub-greeting').style.display = 'none';
             document.getElementById('step5-content').style.display = 'block';
             document.querySelectorAll('.progress-master-circle').forEach(el => el.classList.add('active'));
         } else {
-            alert('Gagal hantar tempahan: ' + (res.error || 'Unknown'));
+            alert('Gagal hantar: ' + (res.error || 'Unknown error'));
         }
     })
-    .catch(() => alert('Ralat sambungan. Pastikan save_booking.php wujud!'));
+    .catch(err => alert('Ralat: ' + err));
 }
 </script>
 

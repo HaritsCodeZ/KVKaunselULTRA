@@ -8,21 +8,41 @@ if (!isset($_SESSION['kaunselor_id'])) {
 }
 
 $admin_name = $_SESSION['counselor_short_name'] ?? $_SESSION['counselor_full_name'] ?? "Cikgu Muhirman";
+$counselor_full_name = $_SESSION['counselor_full_name'] ?? "Encik Muhirman Bin Mu Alim"; // Must match exact name in DB
 
 // Database connection
 $pdo = new PDO("mysql:host=localhost;dbname=kvkaunsel_db", "root", "");
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Get filter from URL (?tahap=SVM or ?tahap=DVM)
+// Get optional tahap filter from URL
 $filter = $_GET['tahap'] ?? '';
-$where = "WHERE archived = 0"; // Hide archived bookings
-if ($filter && in_array($filter, ['SVM','DVM'])) {
-    $where .= " AND tahap = ?";
+$allowed_filters = ['SVM', 'DVM'];
+
+$where_conditions = ["archived = 0", "kaunselor = :kaunselor"];
+$params = [':kaunselor' => $counselor_full_name];
+
+if ($filter && in_array($filter, $allowed_filters)) {
+    $where_conditions[] = "tahap = :tahap";
+    $params[':tahap'] = $filter;
 }
+
+$where = "WHERE " . implode(" AND ", $where_conditions);
+
 $sql = "SELECT * FROM tempahan_kaunseling $where ORDER BY tarikh_tempahan DESC";
 $stmt = $pdo->prepare($sql);
-$stmt->execute($filter ? [$filter] : []);
+$stmt->execute($params);
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Today's count — only for this counselor
+$today_stmt = $pdo->prepare("
+    SELECT COUNT(*) 
+    FROM tempahan_kaunseling 
+    WHERE DATE(tarikh_tempahan) = CURDATE() 
+      AND archived = 0 
+      AND kaunselor = :kaunselor
+");
+$today_stmt->execute([':kaunselor' => $counselor_full_name]);
+$today_count = $today_stmt->fetchColumn();
 ?>
 
 <!DOCTYPE html>
@@ -30,7 +50,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin KVKaunsel - Tempahan Pelajar</title>
+    <title>KVKaunsel Admin_1_Tempahan</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -137,7 +157,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .menu-item-profile:hover { background: rgba(255,255,255,0.15); }
         .menu-item-profile i { width: 36px; font-size: 17px; text-align: center; }
 
-        /* MENU ITEMS - NOW USING <a> TAGS */
+        /* MENU ITEMS */
         .menu-item {
             display: flex;
             align-items: center;
@@ -168,7 +188,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .header .info { text-align:right; }
         .header .info b { font-size:18px; display:block; margin-top:6px; }
 
-        /* ACTIONS BAR: FILTER + BULK ARCHIVE */
+        /* ACTIONS BAR */
         .actions-bar {
             display: flex;
             justify-content: space-between;
@@ -566,19 +586,14 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <div class="info">
             <div>Jumlah Tempahan Hari Ini</div>
-            <b id="todayCount">
-                <?php
-                $today = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling WHERE DATE(tarikh_tempahan) = CURDATE() AND archived = 0")->fetchColumn();
-                echo $today;
-                ?>
-            </b>
+            <b><?= $today_count ?></b>
         </div>
     </div>
 
     <!-- ACTIONS BAR: FILTER + BULK ARCHIVE -->
     <div class="actions-bar">
         <div class="filter">
-            <a href="?" class="<?= !$filter ? 'active' : '' ?>">Semua Tempahan</a>
+            <a href="?" class="<?= !$filter ? 'active' : '' ?>">Semua Tempahan Saya</a>
             <a href="?tahap=SVM" class="<?= $filter=='SVM' ? 'active' : '' ?>">SVM Sahaja</a>
             <a href="?tahap=DVM" class="<?= $filter=='DVM' ? 'active' : '' ?>">DVM Sahaja</a>
         </div>
@@ -664,7 +679,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php else: ?>
         <div class="no-data">
             <i class="fas fa-inbox" style="font-size:60px;color:#ccc;margin-bottom:20px"></i>
-            <p>Tiada tempahan aktif ditemui untuk filter ini.</p>
+            <p>Tiada tempahan untuk anda pada masa ini.</p>
         </div>
     <?php endif; ?>
 </div>
@@ -686,7 +701,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-<!-- CONFIRM MODAL -->
+<!-- ACCEPT CONFIRM MODAL -->
 <div id="confirmModal" class="confirm-modal">
     <div class="confirm-modal-content">
         <h3 id="confirmTitle">Sahkan Tindakan?</h3>
@@ -694,6 +709,18 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="timer-big">5</div>
         <button class="btn-confirm-large" id="finalConfirmBtn">
             <i class="fas fa-check"></i> Sahkan
+        </button>
+    </div>
+</div>
+
+<!-- DECLINE CONFIRM MODAL -->
+<div id="declineConfirmModal" class="confirm-modal">
+    <div class="confirm-modal-content">
+        <h3>Tolak Tempahan Ini?</h3>
+        <p>Pelajar akan dimaklumkan bahawa tempahan mereka ditolak.</p>
+        <div class="timer-big" style="color:#ef4444;">5</div>
+        <button class="btn-confirm-large" id="finalDeclineBtn" style="background:#ef4444;">
+            <i class="fas fa-times-circle"></i> Ya, Tolak Tempahan
         </button>
     </div>
 </div>
@@ -763,11 +790,12 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         title.textContent = `Hi nama saya, ${d.nama}`;
 
-        passImg.src = d.tahap === 'SVM' 
-            ? 'ImageGalleries/SVM_PASS_X.jpg?' + new Date().getTime()
-            : d.tahap === 'DVM' 
-            ? 'ImageGalleries/DVM_PASS_X.jpg?' + new Date().getTime()
-            : 'ImageGalleries/default_pass.jpg';
+        let tahapClean = (d.tahap || '').trim().toUpperCase();
+passImg.src = (tahapClean === 'SVM')
+    ? 'ImageGalleries/SVM_PASS_X.jpg?' + new Date().getTime()
+    : (tahapClean === 'DVM')
+    ? 'ImageGalleries/DVM_PASS_X.jpg?' + new Date().getTime()
+    : 'ImageGalleries/default_pass.jpg?' + new Date().getTime();
 
         body.innerHTML = `
             <div class="detail-grid">
@@ -792,7 +820,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (d.status === 'Baru') {
             footer.innerHTML += `
-                <button class="btn btn-decline" onclick="changeStatus(${d.id}, 'Dibatalkan', 'Tolak')">
+                <button class="btn btn-decline" id="initDeclineBtn">
                     <i class="fas fa-times-circle"></i> Tolak
                 </button>
                 <button class="btn btn-accept" id="initAcceptBtn">
@@ -800,6 +828,15 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </button>
             `;
 
+            // Decline button triggers confirmation
+            document.getElementById('initDeclineBtn').onclick = (e) => {
+                e.stopPropagation();
+                currentAction = 'decline';
+                currentId = d.id;
+                showDeclineConfirmModal();
+            };
+
+            // Accept button triggers confirmation
             document.getElementById('initAcceptBtn').onclick = (e) => {
                 e.stopPropagation();
                 currentAction = 'accept';
@@ -809,7 +846,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } else if (d.status === 'Selesai' || d.status === 'Dibatalkan') {
             footer.innerHTML += `
                 <button class="btn btn-archive" onclick="archiveBooking(${d.id})">
-                    <i class="fas fa-archive"></i> Arkib dari Senarai
+                    <i class="fas fa-archive"></i> Hapus dari Senarai
                 </button>
                 <p style="color:#666; margin-top:16px; font-size:14px;">
                     Status: <strong>${d.status === 'Selesai' ? 'Diterima' : 'Ditolak'}</strong> — sudah diproses
@@ -822,35 +859,10 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         document.getElementById('bookingModal').style.display = 'flex';
     }
 
-    function archiveBooking(id) {
-        currentAction = 'archive';
-        currentId = id;
-        showConfirmModal('Arkib Tempahan Ini?', 'Tempahan ini akan disembunyikan dari senarai tetapi kekal dalam laporan.', 'var(--orange)');
-    }
-
-    function bulkArchive(type) {
-        bulkType = type;
-        let title = '';
-        let message = '';
-
-        if (type === 'selesai') {
-            title = 'Arkib Semua Tempahan Selesai?';
-            message = 'Semua tempahan DITERIMA akan disembunyikan dari senarai.';
-        } else if (type === 'ditolak') {
-            title = 'Arkib Semua Tempahan Ditolak?';
-            message = 'Semua tempahan DITOLAK akan disembunyikan dari senarai.';
-        } else if (type === 'both') {
-            title = 'Arkib Semua Tempahan Selesai & Ditolak?';
-            message = 'Semua tempahan yang sudah diproses akan disembunyikan.';
-        }
-
-        showConfirmModal(title, message, 'var(--orange)');
-    }
-
     function showConfirmModal(title, message, color) {
         document.getElementById('confirmTitle').textContent = title;
         document.getElementById('confirmMessage').textContent = message;
-        document.querySelector('.btn-confirm-large').style.background = color;
+        document.querySelector('#confirmModal .btn-confirm-large').style.background = color;
 
         const modal = document.getElementById('confirmModal');
         const timerEl = modal.querySelector('.timer-big');
@@ -883,6 +895,55 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         };
     }
 
+    function showDeclineConfirmModal() {
+        const modal = document.getElementById('declineConfirmModal');
+        const timerEl = modal.querySelector('.timer-big');
+        let seconds = 5;
+        timerEl.textContent = seconds;
+        modal.classList.add('show');
+
+        clearInterval(confirmTimer);
+        confirmTimer = setInterval(() => {
+            seconds--;
+            timerEl.textContent = seconds;
+            if (seconds <= 0) {
+                clearInterval(confirmTimer);
+                modal.classList.remove('show');
+            }
+        }, 1000);
+
+        document.getElementById('finalDeclineBtn').onclick = () => {
+            clearInterval(confirmTimer);
+            modal.classList.remove('show');
+            changeStatus(currentId, 'Dibatalkan', 'Ditolak');
+        };
+    }
+
+    function archiveBooking(id) {
+        currentAction = 'archive';
+        currentId = id;
+        showConfirmModal('Hapus Tempahan Ini?', 'Tempahan ini akan dihapuskan dari senarai tetapi kekal dalam laporan.', 'var(--orange)');
+    }
+
+    function bulkArchive(type) {
+        bulkType = type;
+        let title = '';
+        let message = '';
+
+        if (type === 'selesai') {
+            title = 'Hapus Semua Tempahan Selesai?';
+            message = 'Semua tempahan DITERIMA akan dihapuskan dari senarai.';
+        } else if (type === 'ditolak') {
+            title = 'Hapus Semua Tempahan Ditolak?';
+            message = 'Semua tempahan DITOLAK akan dihapuskan dari senarai.';
+        } else if (type === 'both') {
+            title = 'Hapus Semua Tempahan Selesai & Ditolak?';
+            message = 'Semua tempahan yang sudah diproses akan dihapuskan.';
+        }
+
+        showConfirmModal(title, message, 'var(--orange)');
+    }
+
     function performBulkArchive(type) {
         fetch('bulk_archive_booking.php', {
             method: 'POST',
@@ -893,25 +954,6 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .then(result => {
             if (result.trim() === 'success') {
                 location.reload();
-            } else {
-                alert('Gagal arkib: ' + result);
-            }
-        })
-        .catch(() => alert('Ralat sambungan.'));
-    }
-
-    function archiveBooking(id) {
-        fetch('archive_booking.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `id=${id}`
-        })
-        .then(r => r.text())
-        .then(result => {
-            if (result.trim() === 'success') {
-                document.querySelector(`tr[data-id="${id}"]`).remove();
-                closeModal();
-                alert('Tempahan berjaya diarkib (disembunyikan dari senarai).');
             } else {
                 alert('Gagal arkib: ' + result);
             }
@@ -940,10 +982,13 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if (confirmTimer) clearInterval(confirmTimer);
         document.getElementById('bookingModal').style.display = 'none';
         document.getElementById('confirmModal').classList.remove('show');
+        document.getElementById('declineConfirmModal').classList.remove('show');
     }
 
     window.addEventListener('click', (e) => {
-        if (e.target.classList.contains('modal') || e.target.id === 'confirmModal') {
+        if (e.target.classList.contains('modal') || 
+            e.target.id === 'confirmModal' || 
+            e.target.id === 'declineConfirmModal') {
             closeModal();
         }
     });

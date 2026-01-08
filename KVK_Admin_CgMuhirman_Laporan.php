@@ -23,6 +23,13 @@ $total_accepted = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling $accepte
 $svm_count = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling $accepted_where AND tahap = 'SVM'")->fetchColumn();
 $dvm_count = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling $accepted_where AND tahap = 'DVM'")->fetchColumn();
 
+// Gender Breakdown (Lelaki / Perempuan)
+$lelaki_count = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling $accepted_where AND jantina = 'Lelaki'")->fetchColumn();
+$perempuan_count = $pdo->query("SELECT COUNT(*) FROM tempahan_kaunseling $accepted_where AND jantina = 'Perempuan'")->fetchColumn();
+
+$lelaki_percent = $total_accepted > 0 ? round(($lelaki_count / $total_accepted) * 100) : 0;
+$perempuan_percent = $total_accepted > 0 ? round(($perempuan_count / $total_accepted) * 100) : 0;
+
 // Monthly Trend (Last 12 months)
 $monthly_sql = "
     SELECT DATE_FORMAT(tarikh_masa, '%Y-%m') AS bulan, 
@@ -65,12 +72,15 @@ if ($total_accepted > 0 && !empty($top_jenis)) {
     $most_common_jenis = $top_jenis[0]['jenis_kaunseling'];
 }
 
-// Recent 10 Accepted Bookings
-$recent = $pdo->query("
-    SELECT nama, tahap, tarikh_masa, kaunselor
+// Top 10 Dominant Programs
+$top_programs = $pdo->query("
+    SELECT program, COUNT(*) AS jumlah
     FROM tempahan_kaunseling
     $accepted_where
-    ORDER BY tarikh_masa DESC
+      AND program IS NOT NULL
+      AND program != ''
+    GROUP BY program
+    ORDER BY jumlah DESC
     LIMIT 10
 ")->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -80,7 +90,7 @@ $recent = $pdo->query("
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin KVKaunsel - Laporan</title>
+    <title>KVKaunsel Admin_1_Laporan</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -296,35 +306,6 @@ $recent = $pdo->query("
         .list-item:last-child { border-bottom: none; }
         .list-item strong { color: #444; }
 
-        .recent-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 16px;
-        }
-        .recent-table th {
-            text-align: left;
-            padding: 12px 16px;
-            background: var(--darkpurple);
-            color: white;
-            font-weight: 600;
-        }
-        .recent-table td {
-            padding: 14px 16px;
-            border-bottom: 1px solid #eee;
-        }
-        .recent-table tr:hover {
-            background: #f3e8ff;
-        }
-        .badge {
-            padding: 6px 12px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        .SVM { background:#fff3cd; color:#856404; }
-        .DVM { background:#d0f2ff; color:#0879a0; }
-
         /* PASSWORD MODAL STYLES */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -493,7 +474,7 @@ $recent = $pdo->query("
         <canvas id="monthlyChart" height="100"></canvas>
     </div>
 
-    <!-- TOP LISTS -->
+    <!-- TOP LISTS + GENDER SECTION -->
     <div class="two-cols">
         <div class="list-card">
             <h2>Jenis Kaunseling Popular</h2>
@@ -507,6 +488,54 @@ $recent = $pdo->query("
             <?php else: ?>
                 <p style="color:#888; text-align:center; padding:30px;">Tiada data jenis kaunseling lagi</p>
             <?php endif; ?>
+
+            <!-- Pecahan Mengikut Jantina -->
+            <div style="margin-top:40px; padding-top:24px; border-top:2px dashed #ddd;">
+                <h2>Pecahan Mengikut Jantina</h2>
+                
+                <?php if ($total_accepted > 0): ?>
+                    <!-- Lelaki -->
+                    <div class="list-item" style="align-items:center;">
+                        <div>
+                            <strong>Lelaki</strong><br>
+                            <span style="font-size:14px; color:#666;"><?= $lelaki_count ?> pelajar</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <strong style="font-size:20px; color:#2563eb;"><?= $lelaki_percent ?>%</strong>
+                        </div>
+                    </div>
+                    <div style="margin: 12px 0;">
+                        <div style="background:#eee; border-radius:12px; height:20px; overflow:hidden;">
+                            <div style="width:<?= $lelaki_percent ?>%; background:linear-gradient(90deg, #2563eb, #3b82f6); height:100%; border-radius:12px; transition:width 0.8s ease;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Perempuan -->
+                    <div class="list-item" style="align-items:center;">
+                        <div>
+                            <strong>Perempuan</strong><br>
+                            <span style="font-size:14px; color:#666;"><?= $perempuan_count ?> pelajar</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <strong style="font-size:20px; color:#ec4899;"><?= $perempuan_percent ?>%</strong>
+                        </div>
+                    </div>
+                    <div style="margin: 12px 0;">
+                        <div style="background:#eee; border-radius:12px; height:20px; overflow:hidden;">
+                            <div style="width:<?= $perempuan_percent ?>%; background:linear-gradient(90deg, #ec4899, #f43f5e); height:100%; border-radius:12px; transition:width 0.8s ease;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:24px; padding-top:16px; border-top:1px dashed #ddd; text-align:center; color:#666;">
+                        <strong>Jumlah Keseluruhan: <?= $total_accepted ?> pelajar</strong>
+                    </div>
+                <?php else: ?>
+                    <p style="color:#888; text-align:center; padding:40px;">
+                        <i class="fas fa-venus-mars" style="font-size:48px; display:block; margin-bottom:16px; color:#ccc;"></i>
+                        Belum ada data jantina dari tempahan diterima.
+                    </p>
+                <?php endif; ?>
+            </div>
         </div>
 
         <div class="list-card">
@@ -563,36 +592,22 @@ $recent = $pdo->query("
         </div>
     </div>
 
-    <!-- RECENT ACCEPTED SESSIONS -->
+    <!-- DOMINANT PROGRAMS SECTION -->
     <div class="chart-container">
-        <h2>Sesi Kaunseling Terbaru (10 Terkini)</h2>
-        <?php if (count($recent) > 0): ?>
-            <table class="recent-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nama Pelajar</th>
-                        <th>Tahap</th>
-                        <th>Tarikh & Masa</th>
-                        <th>Kaunselor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($recent as $i => $r): ?>
-                        <tr>
-                            <td><?= $i + 1 ?></td>
-                            <td><b><?= htmlspecialchars($r['nama']) ?></b></td>
-                            <td><span class="badge <?= $r['tahap'] ?>"><?= $r['tahap'] ?></span></td>
-                            <td><?= date('d/m/Y h:i A', strtotime($r['tarikh_masa'])) ?></td>
-                            <td><b><?= htmlspecialchars($r['kaunselor'] ?: 'Belum Ditentukan') ?></b></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+        <h2>Pecahan Mengikut Program Pelajar</h2>
+        <?php if (count($top_programs) > 0): ?>
+            <div class="list-card" style="padding:0 28px 28px;">
+                <?php foreach ($top_programs as $prog): ?>
+                    <div class="list-item">
+                        <span><?= htmlspecialchars($prog['program'] ?: 'Tiada Nama Program') ?></span>
+                        <strong><?= $prog['jumlah'] ?> tempahan diterima</strong>
+                    </div>
+                <?php endforeach; ?>
+            </div>
         <?php else: ?>
             <p style="text-align:center; color:#888; padding:50px; font-size:18px;">
-                <i class="fas fa-calendar-times" style="font-size:48px; display:block; margin-bottom:20px; color:#ccc;"></i>
-                Tiada sesi kaunseling diterima lagi.
+                <i class="fas fa-graduation-cap" style="font-size:48px; display:block; margin-bottom:20px; color:#ccc;"></i>
+                Tiada data program dari tempahan diterima lagi.
             </p>
         <?php endif; ?>
     </div>

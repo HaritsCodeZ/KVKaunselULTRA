@@ -594,3 +594,1014 @@ Array
 )
 
 
+2026-01-08 08:55:14
+Array
+(
+    [tahap] => DVM
+    [nama] => Mr1
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T16:56
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 1234567
+)
+
+
+2026-01-08 08:55:41
+Array
+(
+    [tahap] => DVM
+    [nama] => Mr2
+    [program] => Perakaunan
+    [semester] => Semester 3
+    [jantina] => Lelaki
+    [kaum] => Lain-lain
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T17:57
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 123456789
+)
+
+
+2026-01-08 08:56:05
+Array
+(
+    [tahap] => SVM
+    [nama] => Mr3
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 2
+    [jantina] => Perempuan
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-15T16:56
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 122
+)
+
+
+2026-01-08 08:56:25
+Array
+(
+    [tahap] => SVM
+    [nama] => Mr4
+    [program] => Program Hospitaliti Seni Kulinari
+    [semester] => Semester 3
+    [jantina] => Perempuan
+    [kaum] => Bumiputera
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-25T16:57
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 12345689
+)
+
+
+2026-01-08 08:56:57
+Array
+(
+    [tahap] => DVM
+    [nama] => Cubaan Dunia1
+    [program] => Program Teknologi Kimpalan
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T16:57
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => 1234567
+)
+
+
+2026-01-08 08:57:24
+Array
+(
+    [tahap] => DVM
+    [nama] => Cubaan Dunia 2
+    [program] => Program Teknologi Kimpalan
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-02-05T16:58
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => 12345678
+)
+
+
+2026-01-08 08:57:44
+Array
+(
+    [tahap] => SVM
+    [nama] => Cubaan Dunia 3
+    [program] => Program Teknologi Pemesinan Industri
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-23T16:58
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => 1234567890
+)
+
+
+2026-01-08 08:58:11
+Array
+(
+    [tahap] => SVM
+    [nama] => Cubaan Dunia 4
+    [program] => Program Teknologi Kimpalan
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-14T18:01
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => 1233242
+)
+
+
+2026-01-08 09:43:08
+Array
+(
+    [tahap] => DVM
+    [nama] => Mr1
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T17:44
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 1234567
+)
+
+
+2026-01-08 09:43:30
+Array
+(
+    [tahap] => DVM
+    [nama] => Mr2
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T17:43
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 1234567
+)
+
+
+2026-01-08 09:43:50
+Array
+(
+    [tahap] => DVM
+    [nama] => Mr3
+    [program] => Program Teknologi Automotif
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Bumiputera
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T17:43
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 1234567
+)
+
+
+2026-01-08 09:44:10
+Array
+(
+    [tahap] => SVM
+    [nama] => Mr4
+    [program] => Perkaunan
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-09T17:45
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 123456
+)
+
+
+2026-01-08 09:44:42
+Array
+(
+    [tahap] => SVM
+    [nama] => Mr5
+    [program] => Program Hospitaliti Seni Kulinari
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-16T17:45
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 123456789
+)
+
+
+2026-01-08 09:45:01
+Array
+(
+    [tahap] => SVM
+    [nama] => Mr6
+    [program] => Program Hospitaliti Seni Kulinari
+    [semester] => Semester 2
+    [jantina] => Perempuan
+    [kaum] => Bumiputera
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T17:45
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 12345678
+)
+
+
+2026-01-08 10:40:06
+Array
+(
+    [tahap] => DVM
+    [nama] => Mister_1
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T18:40
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 123456
+)
+
+
+2026-01-08 10:40:24
+Array
+(
+    [tahap] => DVM
+    [nama] => Mister_2
+    [program] => Perakaunan
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T19:42
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 1234568
+)
+
+
+2026-01-08 10:41:43
+Array
+(
+    [tahap] => DVM
+    [nama] => Mister_3
+    [program] => Program Teknologi Kimpalan
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-07T18:42
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 123456
+)
+
+
+2026-01-08 10:42:13
+Array
+(
+    [tahap] => DVM
+    [nama] => Mister_4
+    [program] => Program Teknologi Kimpalan
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-27T18:43
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 123468
+)
+
+
+2026-01-08 10:42:37
+Array
+(
+    [tahap] => DVM
+    [nama] => Mister_5
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T19:44
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => w2e3r4t5y6ui8ytw
+)
+
+
+2026-01-08 10:43:03
+Array
+(
+    [tahap] => SVM
+    [nama] => Mister_6
+    [program] => Program Hospitaliti Seni Kulinari
+    [semester] => Semester 3
+    [jantina] => Perempuan
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T18:43
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 1234567uyhtgrfe
+)
+
+
+2026-01-08 10:44:13
+Array
+(
+    [tahap] => SVM
+    [nama] => Mister_7
+    [program] => Perkaunan
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-18T19:47
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 2wedw
+)
+
+
+2026-01-08 10:44:43
+Array
+(
+    [tahap] => SVM
+    [nama] => Mister_8
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-09T18:45
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => w2etrterf
+)
+
+
+2026-01-08 10:45:02
+Array
+(
+    [tahap] => SVM
+    [nama] => Mister_9
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-15T18:45
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 2wswdew
+)
+
+
+2026-01-08 10:45:26
+Array
+(
+    [tahap] => SVM
+    [nama] => Mister_10
+    [program] => Program Teknologi Automotif
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T18:46
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => ww2e2
+)
+
+
+2026-01-08 10:46:26
+Array
+(
+    [tahap] => DVM
+    [nama] => Miss_1
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T18:47
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => w2weede
+)
+
+
+2026-01-08 10:46:44
+Array
+(
+    [tahap] => DVM
+    [nama] => Miss_2
+    [program] => Program Teknologi Automotif
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Bumiputera
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T19:48
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => swddwdw
+)
+
+
+2026-01-08 10:47:11
+Array
+(
+    [tahap] => DVM
+    [nama] => Miss_3
+    [program] => Program Teknologi Kimpalan
+    [semester] => Semester 2
+    [jantina] => Perempuan
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T20:50
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => dadqad
+)
+
+
+2026-01-08 10:47:31
+Array
+(
+    [tahap] => DVM
+    [nama] => Miss_4
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T18:48
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => qws
+)
+
+
+2026-01-08 10:47:51
+Array
+(
+    [tahap] => DVM
+    [nama] => Miss_5
+    [program] => Program Hospitaliti Seni Kulinari
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T18:48
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => 1wqdq
+)
+
+
+2026-01-08 10:57:13
+Array
+(
+    [tahap] => SVM
+    [nama] => Miss_6
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-12T18:58
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => 2w2e
+)
+
+
+2026-01-08 10:57:33
+Array
+(
+    [tahap] => SVM
+    [nama] => Miss_7
+    [program] => Program Teknologi Automotif
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-07T18:58
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => weEDQD
+)
+
+
+2026-01-08 10:57:56
+Array
+(
+    [tahap] => SVM
+    [nama] => Miss_8
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-27T18:58
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => WEWQDQ
+)
+
+
+2026-01-08 10:58:13
+Array
+(
+    [tahap] => SVM
+    [nama] => Miss_9
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-13T19:00
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => EDWD
+)
+
+
+2026-01-08 10:58:34
+Array
+(
+    [tahap] => SVM
+    [nama] => Miss_10
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-26T21:59
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => WQDWQD
+)
+
+
+2026-01-08 11:14:45
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => Cristiano Ronaldo
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T20:17
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => 2wqeq
+)
+
+
+2026-01-08 11:15:42
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => Lionel Messi
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T20:17
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => wwqd
+)
+
+
+2026-01-08 11:37:00
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => sdsd
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T20:37
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => dadqwdw
+)
+
+
+2026-01-08 11:37:22
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => dqdkqndpimqd
+    [program] => Program Teknologi Elektrik
+    [semester] => Semester 2
+    [jantina] => Perempuan
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-15T21:39
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => adqdqd
+)
+
+
+2026-01-08 11:37:46
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => dwdheoiwdid
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-29T21:39
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => dwdqd
+)
+
+
+2026-01-08 11:38:10
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => ad
+    [program] => Program Hospitaliti Seni Kulinari
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-19T19:39
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => qdwedwed
+)
+
+
+2026-01-08 12:00:03
+Array
+(
+    [student_id] => 
+    [tahap] => SVM
+    [nama] => Dude!
+    [program] => Perakaunan
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T20:01
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Tanita Anak Numpang
+    [sebab] => wdwd
+)
+
+
+2026-01-08 12:00:31
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => Dude1
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T20:02
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Tanita Anak Numpang
+    [sebab] => dwedew
+)
+
+
+2026-01-08 12:00:48
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => Dude2
+    [program] => Perakaunan
+    [semester] => Semester 2
+    [jantina] => Perempuan
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T21:02
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Tanita Anak Numpang
+    [sebab] => dd
+)
+
+
+2026-01-08 12:01:06
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => Dude3
+    [program] => Perkaunan
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Bumiputera
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T22:01
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Tanita Anak Numpang
+    [sebab] => adwed
+)
+
+
+2026-01-08 12:01:21
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => Dude4
+    [program] => Perkaunan
+    [semester] => Semester 2
+    [jantina] => Perempuan
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-10T20:03
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Tanita Anak Numpang
+    [sebab] => wdfwe
+)
+
+
+2026-01-08 12:04:14
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => sidjid
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T20:05
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Tanita Anak Numpang
+    [sebab] => dqdq
+)
+
+
+2026-01-08 12:05:22
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => sdsd
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T20:06
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => WEWE
+)
+
+
+2026-01-08 12:05:38
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => DQDQ
+    [program] => Perkaunan
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-21T20:06
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Whilemina Thimah Gregory Anak Jimbun
+    [sebab] => WE
+)
+
+
+2026-01-08 12:06:55
+Array
+(
+    [student_id] => 
+    [tahap] => SVM
+    [nama] => ENCIK DEEVEEM
+    [program] => Perakaunan
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T20:07
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => ASDWED
+)
+
+
+2026-01-08 12:07:28
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => ENCIK DEEVEEME
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-16T20:08
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => WDEW
+)
+
+
+2026-01-08 12:07:47
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => ENCIK ES VEE EM
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 1
+    [jantina] => Perempuan
+    [kaum] => Melayu
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T20:10
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => WDWED
+)
+
+
+2026-01-08 12:11:23
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => DEEVM
+    [program] => Perakaunan
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 0198102444
+    [tarikh_masa] => 2026-01-08T20:12
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Kelompok
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => QWDWQED
+)
+
+
+2026-01-08 12:11:44
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => SEEEMVME
+    [program] => Perkaunan
+    [semester] => Semester 2
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 1234567
+    [tarikh_masa] => 2026-01-08T22:14
+    [jenis_sesi] => Bersemuka
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => DWDW
+)
+
+
+2026-01-08 12:15:44
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => Encik DVM
+    [program] => Perakaunan
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Cina
+    [telefon] => 1234567
+    [tarikh_masa] => 2026-01-08T20:16
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => WEWE
+)
+
+
+2026-01-08 12:16:03
+Array
+(
+    [student_id] => SKV0124KB012
+    [tahap] => SVM
+    [nama] => ENCIK SVM
+    [program] => Program Sistem Komputer Dan Rangkaian
+    [semester] => Semester 1
+    [jantina] => Lelaki
+    [kaum] => Melayu
+    [telefon] => 1234567
+    [tarikh_masa] => 2026-01-08T20:16
+    [jenis_sesi] => Online
+    [jenis_kaunseling] => Kaunseling Individu
+    [kaunselor] => Encik Muhirman Bin Mu Alim
+    [sebab] => WDWD
+)
+
+

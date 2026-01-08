@@ -2,32 +2,31 @@
 session_start();
 
 // Security: Only Whilemina can access
-if (!isset($_SESSION['kaunselor_id']) || $_SESSION['counselor_full_name'] !== 'Whilemina Thimah Gregory Anak Jimbun') {
+if (!isset($_SESSION['kaunselor_id']) || ($_SESSION['counselor_full_name'] ?? '') !== 'Whilemina Thimah Gregory Anak Jimbun') {
     header("Location: UltimateLoginPage.php");
     exit;
 }
 
 $admin_name = $_SESSION['counselor_short_name'] ?? "Cg. Whilemina";
+$counselor_full_name = 'Whilemina Thimah Gregory Anak Jimbun'; // Exact match with DB
 
 // Database connection
-try {
-    $pdo = new PDO("mysql:host=localhost;dbname=kvkaunsel_db", "root", "");
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
-}
+$pdo = new PDO("mysql:host=localhost;dbname=kvkaunsel_db", "root", "");
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$kaunselor = 'Whilemina Thimah Gregory Anak Jimbun';
-
-// Get filter from URL (?tahap=SVM or ?tahap=DVM)
+// Get optional tahap filter from URL
 $filter = $_GET['tahap'] ?? '';
-$where = "WHERE archived = 0 AND kaunselor = ?";
-$params = [$kaunselor];
+$allowed_filters = ['SVM', 'DVM'];
 
-if ($filter && in_array($filter, ['SVM','DVM'])) {
-    $where .= " AND tahap = ?";
-    $params[] = $filter;
+$where_conditions = ["archived = 0", "kaunselor = :kaunselor"];
+$params = [':kaunselor' => $counselor_full_name];
+
+if ($filter && in_array($filter, $allowed_filters)) {
+    $where_conditions[] = "tahap = :tahap";
+    $params[':tahap'] = $filter;
 }
+
+$where = "WHERE " . implode(" AND ", $where_conditions);
 
 $sql = "SELECT * FROM tempahan_kaunseling $where ORDER BY tarikh_tempahan DESC";
 $stmt = $pdo->prepare($sql);
@@ -35,8 +34,14 @@ $stmt->execute($params);
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Today's count — only for Whilemina
-$today_stmt = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling WHERE DATE(tarikh_tempahan) = CURDATE() AND archived = 0 AND kaunselor = ?");
-$today_stmt->execute([$kaunselor]);
+$today_stmt = $pdo->prepare("
+    SELECT COUNT(*) 
+    FROM tempahan_kaunseling 
+    WHERE DATE(tarikh_tempahan) = CURDATE() 
+      AND archived = 0 
+      AND kaunselor = :kaunselor
+");
+$today_stmt->execute([':kaunselor' => $counselor_full_name]);
 $today_count = $today_stmt->fetchColumn();
 ?>
 
@@ -45,7 +50,7 @@ $today_count = $today_stmt->fetchColumn();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KVKaunsel - Tempahan Pelajar (Cg. Whilemina)</title>
+    <title>KVKaunsel Admin_3_Tempahan</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -239,17 +244,6 @@ $today_count = $today_stmt->fetchColumn();
             text-align:center; padding:80px 20px; color:#666; font-size:18px;
         }
 
-        .btn-archive {
-            background: var(--orange);
-            color: white;
-        }
-        .btn-archive:hover {
-            background: var(--orange-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(245,158,11,0.4);
-        }
-
-        /* MODAL - TWO COLUMN LAYOUT */
         .modal {
             display: none;
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -437,7 +431,6 @@ $today_count = $today_stmt->fetchColumn();
             to { transform: scale(1); opacity: 1; }
         }
 
-        /* PASSWORD MODAL STYLES */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
@@ -577,7 +570,7 @@ $today_count = $today_stmt->fetchColumn();
 
     <div class="actions-bar">
         <div class="filter">
-            <a href="?" class="<?= !$filter ? 'active' : '' ?>">Semua Tempahan</a>
+            <a href="?" class="<?= !$filter ? 'active' : '' ?>">Semua Tempahan Saya</a>
             <a href="?tahap=SVM" class="<?= $filter=='SVM' ? 'active' : '' ?>">SVM Sahaja</a>
             <a href="?tahap=DVM" class="<?= $filter=='DVM' ? 'active' : '' ?>">DVM Sahaja</a>
         </div>
@@ -662,23 +655,347 @@ $today_count = $today_stmt->fetchColumn();
     <?php else: ?>
         <div class="no-data">
             <i class="fas fa-inbox" style="font-size:60px;color:#ccc;margin-bottom:20px"></i>
-            <p>Tiada tempahan aktif ditemui untuk filter ini.</p>
+            <p>Tiada tempahan aktif ditemui untuk anda.</p>
         </div>
     <?php endif; ?>
 </div>
 
-<!-- All modals and full JavaScript (100% identical to Muhirman's) -->
-<!-- Including booking modal, confirm modal, confetti, password modal, all functions -->
+<!-- BOOKING MODAL -->
+<div id="bookingModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-left">
+            <img id="passImage" src="" alt="Student Pass">
+        </div>
+        <div class="modal-right">
+            <div class="modal-header">
+                <h2 id="modalTitle">Butiran Tempahan</h2>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer" id="modalFooter"></div>
+        </div>
+    </div>
+</div>
 
+<!-- ACCEPT CONFIRM MODAL -->
+<div id="confirmModal" class="confirm-modal">
+    <div class="confirm-modal-content">
+        <h3 id="confirmTitle">Sahkan Tindakan?</h3>
+        <p id="confirmMessage">Anda mempunyai masa untuk mengesahkan tindakan ini.</p>
+        <div class="timer-big">5</div>
+        <button class="btn-confirm-large" id="finalConfirmBtn">
+            <i class="fas fa-check"></i> Sahkan
+        </button>
+    </div>
+</div>
+
+<!-- DECLINE CONFIRM MODAL -->
+<div id="declineConfirmModal" class="confirm-modal">
+    <div class="confirm-modal-content">
+        <h3>Tolak Tempahan Ini?</h3>
+        <p>Pelajar akan dimaklumkan bahawa tempahan mereka ditolak.</p>
+        <div class="timer-big" style="color:#ef4444;">5</div>
+        <button class="btn-confirm-large" id="finalDeclineBtn" style="background:#ef4444;">
+            <i class="fas fa-times-circle"></i> Ya, Tolak Tempahan
+        </button>
+    </div>
+</div>
+
+<!-- Confetti CDN -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
 <script>
-    // All your original JavaScript — unchanged except links point to Whilemina's pages
-    // (Same profile dropdown, password modal, booking modal logic, bulk archive, etc.)
-    // ... [Paste the entire <script> block from your original file here] ...
-    
-    // Only change: in openBookingModal, the pass image path remains the same (SVM/DVM logic is universal)
-</script>
+    let confirmTimer = null;
+    let currentAction = null;
+    let currentId = null;
+    let bulkType = null;
 
+    document.addEventListener('DOMContentLoaded', function() {
+        const profileDropdown = document.getElementById('profileDropdown');
+        const profileMenu = document.getElementById('profileMenu');
+
+        if (profileDropdown && profileMenu) {
+            profileDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+                profileMenu.style.display = profileMenu.style.display === 'block' ? 'none' : 'block';
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (profileMenu && !profileDropdown.contains(e.target)) {
+                profileMenu.style.display = 'none';
+            }
+        });
+    });
+
+    window.openChangePasswordModal = function() {
+        document.getElementById('passwordModal').style.display = 'flex';
+        document.getElementById('profileMenu').style.display = 'none';
+        document.getElementById('passwordMessage').innerHTML = '';
+        document.getElementById('changePassForm').reset();
+        document.querySelectorAll('.password-input').forEach(input => {
+            input.type = 'password';
+            const icon = input.parentElement.querySelector('.eye-icon');
+            if (icon) icon.classList.replace('fa-eye-slash', 'fa-eye');
+        });
+    };
+
+    window.closePasswordModal = function() {
+        document.getElementById('passwordModal').style.display = 'none';
+    };
+
+    window.togglePassword = function(icon, fieldName) {
+        const input = document.querySelector(`input[name="${fieldName}"]`);
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    };
+
+    function openBookingModal(d) {
+        const body = document.getElementById('modalBody');
+        const footer = document.getElementById('modalFooter');
+        const passImg = document.getElementById('passImage');
+        const title = document.getElementById('modalTitle');
+
+        title.textContent = `Hi nama saya, ${d.nama}`;
+
+        passImg.src = d.tahap === 'SVM' 
+            ? 'ImageGalleries/SVM_PASS_X.jpg?' + new Date().getTime()
+            : d.tahap === 'DVM' 
+            ? 'ImageGalleries/DVM_PASS_X.jpg?' + new Date().getTime()
+            : 'ImageGalleries/default_pass.jpg';
+
+        body.innerHTML = `
+            <div class="detail-grid">
+                <strong>Nama Pelajar</strong>    <div><b>${d.nama}</b></div>
+                <strong>Tahap</strong>           <div><span class="badge ${d.tahap}">${d.tahap}</span></div>
+                <strong>Program</strong>         <div>${d.program || '-'} / <b>${d.semester || '-'}</b></div>
+                <strong>Telefon</strong>         <div>${d.telefon}</div>
+                <strong>Jantina / Kaum</strong>   <div>${d.jantina} / ${d.kaum}</div>
+                <strong>Tarikh & Masa</strong>   <div><b>${d.tarikh}</b></div>
+                <strong>Jenis Sesi</strong>      <div>${d.jenis_sesi}</div>
+                <strong>Jenis Kaunseling</strong><div>${d.jenis_kaunseling || 'Tiada'}</div>
+                <strong>Kaunselor</strong>       <div><b>${d.kaunselor || 'Belum Ditentukan'}</b></div>
+                <strong>Sebab Penuh</strong>
+                <div style="grid-column: 1 / -1; background:#f8f9ff; padding:20px; border-radius:12px; border-left:5px solid var(--purple); white-space: pre-wrap;">
+                    ${d.sebab || '<em style="color:#888;">Tiada sebab diberikan</em>'}
+                </div>
+                <strong>Status</strong>          <div><span class="badge ${d.status==='Baru'?'Baru':d.status}">${d.status}</span></div>
+            </div>
+        `;
+
+        footer.innerHTML = '';
+
+        if (d.status === 'Baru') {
+            footer.innerHTML += `
+                <button class="btn btn-decline" id="initDeclineBtn">
+                    <i class="fas fa-times-circle"></i> Tolak
+                </button>
+                <button class="btn btn-accept" id="initAcceptBtn">
+                    <i class="fas fa-check-circle"></i> Terima
+                </button>
+            `;
+
+            // Decline button — show red confirmation
+            document.getElementById('initDeclineBtn').onclick = (e) => {
+                e.stopPropagation();
+                currentAction = 'decline';
+                currentId = d.id;
+                showDeclineConfirmModal();
+            };
+
+            // Accept button — show green confirmation
+            document.getElementById('initAcceptBtn').onclick = (e) => {
+                e.stopPropagation();
+                currentAction = 'accept';
+                currentId = d.id;
+                showConfirmModal('Sahkan Penerimaan Tempahan?', 'Anda mempunyai masa untuk mengesahkan penerimaan ini.', '#10b981');
+            };
+        } else if (d.status === 'Selesai' || d.status === 'Dibatalkan') {
+            footer.innerHTML += `
+                <button class="btn btn-archive" onclick="archiveBooking(${d.id})">
+                    <i class="fas fa-archive"></i> Hapus dari Senarai
+                </button>
+                <p style="color:#666; margin-top:16px; font-size:14px;">
+                    Status: <strong>${d.status === 'Selesai' ? 'Diterima' : 'Ditolak'}</strong> — sudah diproses
+                </p>
+            `;
+        } else {
+            footer.innerHTML = `<p style="color:#666;">Status: <strong>${d.status}</strong> — sudah diproses</p>`;
+        }
+
+        document.getElementById('bookingModal').style.display = 'flex';
+    }
+
+    function showConfirmModal(title, message, color) {
+        document.getElementById('confirmTitle').textContent = title;
+        document.getElementById('confirmMessage').textContent = message;
+        document.querySelector('#confirmModal .btn-confirm-large').style.background = color;
+
+        const modal = document.getElementById('confirmModal');
+        const timerEl = modal.querySelector('.timer-big');
+        let seconds = 5;
+        timerEl.textContent = seconds;
+        modal.classList.add('show');
+
+        clearInterval(confirmTimer);
+        confirmTimer = setInterval(() => {
+            seconds--;
+            timerEl.textContent = seconds;
+            if (seconds <= 0) {
+                clearInterval(confirmTimer);
+                modal.classList.remove('show');
+            }
+        }, 1000);
+
+        document.getElementById('finalConfirmBtn').onclick = () => {
+            clearInterval(confirmTimer);
+            modal.classList.remove('show');
+
+            if (bulkType) {
+                performBulkArchive(bulkType);
+                bulkType = null;
+            } else if (currentAction === 'accept') {
+                changeStatus(currentId, 'Selesai', 'Diterima');
+            } else if (currentAction === 'archive') {
+                archiveBooking(currentId);
+            }
+        };
+    }
+
+    function showDeclineConfirmModal() {
+        const modal = document.getElementById('declineConfirmModal');
+        const timerEl = modal.querySelector('.timer-big');
+        let seconds = 5;
+        timerEl.textContent = seconds;
+        modal.classList.add('show');
+
+        clearInterval(confirmTimer);
+        confirmTimer = setInterval(() => {
+            seconds--;
+            timerEl.textContent = seconds;
+            if (seconds <= 0) {
+                clearInterval(confirmTimer);
+                modal.classList.remove('show');
+            }
+        }, 1000);
+
+        document.getElementById('finalDeclineBtn').onclick = () => {
+            clearInterval(confirmTimer);
+            modal.classList.remove('show');
+            changeStatus(currentId, 'Dibatalkan', 'Ditolak');
+        };
+    }
+
+    function archiveBooking(id) {
+        currentAction = 'archive';
+        currentId = id;
+        showConfirmModal('Hapus Tempahan Ini?', 'Tempahan ini akan dihapuskan dari senarai tetapi kekal dalam laporan.', 'var(--orange)');
+    }
+
+    function bulkArchive(type) {
+        bulkType = type;
+        let title = '';
+        let message = '';
+
+        if (type === 'selesai') {
+            title = 'Hapus Semua Tempahan Selesai?';
+            message = 'Semua tempahan DITERIMA akan dihapuskan dari senarai.';
+        } else if (type === 'ditolak') {
+            title = 'Hapus Semua Tempahan Ditolak?';
+            message = 'Semua tempahan DITOLAK akan dihapuskan dari senarai.';
+        } else if (type === 'both') {
+            title = 'Hapus Semua Tempahan Selesai & Ditolak?';
+            message = 'Semua tempahan yang sudah diproses akan dihapuskan.';
+        }
+
+        showConfirmModal(title, message, 'var(--orange)');
+    }
+
+    function performBulkArchive(type) {
+        fetch('bulk_archive_booking.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `type=${type}`
+        })
+        .then(r => r.text())
+        .then(result => {
+            if (result.trim() === 'success') {
+                location.reload();
+            } else {
+                alert('Gagal arkib: ' + result);
+            }
+        })
+        .catch(() => alert('Ralat sambungan.'));
+    }
+
+    function changeStatus(id, dbStatus, displayText) {
+        fetch('update_status.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `id=${id}&status=${encodeURIComponent(dbStatus)}`
+        })
+        .then(r => r.text())
+        .then(result => {
+            if (result.trim() === 'success') {
+                location.reload();
+                if (dbStatus === 'Selesai') {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                }
+            } else {
+                alert('Gagal: ' + result);
+            }
+        })
+        .catch(() => alert('Ralat sambungan.'));
+    }
+
+    function closeModal() {
+        if (confirmTimer) clearInterval(confirmTimer);
+        document.getElementById('bookingModal').style.display = 'none';
+        document.getElementById('confirmModal').classList.remove('show');
+        document.getElementById('declineConfirmModal').classList.remove('show');
+    }
+
+    window.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal') || 
+            e.target.id === 'confirmModal' || 
+            e.target.id === 'declineConfirmModal') {
+            closeModal();
+        }
+    });
+
+    document.getElementById('changePassForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const messageDiv = document.getElementById('passwordMessage');
+        const data = new FormData(this);
+
+        fetch('change_admin_pass.php', {
+            method: 'POST',
+            body: data,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.json())
+        .then(result => {
+            messageDiv.style.color = result.success ? '#10b981' : '#ef4444';
+            messageDiv.innerHTML = result.message;
+
+            if (result.success) {
+                setTimeout(closePasswordModal, 2000);
+            }
+        })
+        .catch(() => {
+            messageDiv.style.color = '#ef4444';
+            messageDiv.innerHTML = 'Ralat sambungan. Sila cuba lagi.';
+        });
+    });
+</script>
 </body>
 </html>

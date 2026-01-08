@@ -2,13 +2,15 @@
 session_start();
 
 // Security: Only Whilemina can access
-if (!isset($_SESSION['kaunselor_id']) || $_SESSION['counselor_full_name'] !== 'Whilemina Thimah Gregory Anak Jimbun') {
+if (!isset($_SESSION['kaunselor_id']) || ($_SESSION['counselor_full_name'] ?? '') !== 'Whilemina Thimah Gregory Anak Jimbun') {
     header("Location: UltimateLoginPage.php");
     exit;
 }
 
 $admin_name = $_SESSION['counselor_short_name'] ?? "Cg. Whilemina";
+$counselor_full_name = 'Whilemina Thimah Gregory Anak Jimbun'; // Exact DB match
 
+// Database connection
 try {
     $pdo = new PDO("mysql:host=localhost;dbname=kvkaunsel_db", "root", "");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -17,25 +19,24 @@ try {
 }
 
 $approved_status = 'Selesai';
-$counselor_full  = 'Whilemina Thimah Gregory Anak Jimbun';
 
 // Fetch approved bookings for Whilemina only
 $stmt = $pdo->prepare("
     SELECT id, nama, tarikh_masa, jenis_kaunseling, program, semester 
     FROM tempahan_kaunseling 
-    WHERE kaunselor = ? AND status = ?
+    WHERE kaunselor = :kaunselor AND status = :status
     ORDER BY tarikh_masa
 ");
-$stmt->execute([$counselor_full, $approved_status]);
+$stmt->execute([':kaunselor' => $counselor_full_name, ':status' => $approved_status]);
 $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Today's approved appointments count for Whilemina
 $today_stmt = $pdo->prepare("
     SELECT COUNT(*) FROM tempahan_kaunseling 
     WHERE DATE(tarikh_masa) = CURDATE() 
-      AND kaunselor = ? AND status = ?
+      AND kaunselor = :kaunselor AND status = :status
 ");
-$today_stmt->execute([$counselor_full, $approved_status]);
+$today_stmt->execute([':kaunselor' => $counselor_full_name, ':status' => $approved_status]);
 $today_count = $today_stmt->fetchColumn();
 
 // Build FullCalendar events
@@ -72,7 +73,7 @@ foreach ($bookings as $booking) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KVKaunsel - Temujanji (Cg. Whilemina)</title>
+    <title>KVKaunsel Admin_3_Temujanji</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
@@ -414,10 +415,6 @@ foreach ($bookings as $booking) {
     </div>
 
     <?php if (empty($events)): ?>
-        <div style="text-align:center; padding:40px; color:#666; font-size:18px;">
-            Tiada temujanji yang diluluskan lagi.<br>
-            Selepas anda meluluskan tempahan pelajar, ia akan muncul di sini secara automatik.
-        </div>
     <?php endif; ?>
 
     <div id="calendar"></div>
@@ -472,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // FullCalendar initialization
+    // FullCalendar
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',

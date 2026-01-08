@@ -2,95 +2,105 @@
 session_start();
 
 // Security: Only Whilemina can access
-if (!isset($_SESSION['kaunselor_id']) || $_SESSION['counselor_full_name'] !== 'Whilemina Thimah Gregory Anak Jimbun') {
+if (!isset($_SESSION['kaunselor_id']) || ($_SESSION['counselor_full_name'] ?? '') !== 'Whilemina Thimah Gregory Anak Jimbun') {
     header("Location: UltimateLoginPage.php");
     exit;
 }
 
 $admin_name = $_SESSION['counselor_short_name'] ?? "Cg. Whilemina";
+$counselor_full_name = 'Whilemina Thimah Gregory Anak Jimbun';
 
-try {
-    $pdo = new PDO("mysql:host=localhost;dbname=kvkaunsel_db", "root", "");
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Sambungan pangkalan data gagal: " . $e->getMessage());
-}
+// Database connection
+$pdo = new PDO("mysql:host=localhost;dbname=kvkaunsel_db", "root", "");
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$kaunselor = 'Whilemina Thimah Gregory Anak Jimbun';
-$accepted_where = "WHERE status = 'Selesai' AND kaunselor = ?";
+// Base condition for accepted bookings only + filtered by counselor
+$base_where = "WHERE status = 'Selesai' AND kaunselor = :kaunselor";
+$params_base = [':kaunselor' => $counselor_full_name];
 
-// Total Accepted Bookings for Whilemina
-$stmt_total = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling $accepted_where");
-$stmt_total->execute([$kaunselor]);
-$total_accepted = $stmt_total->fetchColumn();
+// Total Accepted Bookings
+$total_accepted = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling $base_where");
+$total_accepted->execute($params_base);
+$total_accepted = $total_accepted->fetchColumn();
 
-// SVM vs DVM Breakdown for Whilemina
-$stmt_svm = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling $accepted_where AND tahap = 'SVM'");
-$stmt_svm->execute([$kaunselor]);
-$svm_count = $stmt_svm->fetchColumn();
+// SVM vs DVM Breakdown
+$svm_count = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling $base_where AND tahap = 'SVM'");
+$svm_count->execute($params_base);
+$svm_count = $svm_count->fetchColumn();
 
-$stmt_dvm = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling $accepted_where AND tahap = 'DVM'");
-$stmt_dvm->execute([$kaunselor]);
-$dvm_count = $stmt_dvm->fetchColumn();
+$dvm_count = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling $base_where AND tahap = 'DVM'");
+$dvm_count->execute($params_base);
+$dvm_count = $dvm_count->fetchColumn();
 
-// Monthly Trend (Last 12 months) for Whilemina
+// Gender Breakdown
+$lelaki_count = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling $base_where AND jantina = 'Lelaki'");
+$lelaki_count->execute($params_base);
+$lelaki_count = $lelaki_count->fetchColumn();
+
+$perempuan_count = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling $base_where AND jantina = 'Perempuan'");
+$perempuan_count->execute($params_base);
+$perempuan_count = $perempuan_count->fetchColumn();
+
+$lelaki_percent = $total_accepted > 0 ? round(($lelaki_count / $total_accepted) * 100) : 0;
+$perempuan_percent = $total_accepted > 0 ? round(($perempuan_count / $total_accepted) * 100) : 0;
+
+// Monthly Trend (Last 12 months)
 $monthly_sql = "
     SELECT DATE_FORMAT(tarikh_masa, '%Y-%m') AS bulan, 
            COUNT(*) AS jumlah
     FROM tempahan_kaunseling
-    WHERE kaunselor = ?
-      AND status = 'Selesai'
+    $base_where
       AND tarikh_masa >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
     GROUP BY bulan
     ORDER BY bulan ASC
 ";
-$stmt_monthly = $pdo->prepare($monthly_sql);
-$stmt_monthly->execute([$kaunselor]);
-$monthly_data = $stmt_monthly->fetchAll(PDO::FETCH_KEY_PAIR); // 'YYYY-MM' => count
+$monthly_stmt = $pdo->prepare($monthly_sql);
+$monthly_stmt->execute($params_base);
+$monthly_data = $monthly_stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 
 // Prepare labels and data for chart (oldest → newest)
 $months = [];
 $counts = [];
 for ($i = 11; $i >= 0; $i--) {
     $date = date('Y-m', strtotime("-$i months"));
-    $months[] = date('M Y', strtotime($date)); // e.g., Jan 2026
+    $months[] = date('M Y', strtotime($date));
     $counts[] = $monthly_data[$date] ?? 0;
 }
 
-// Top Jenis Kaunseling for Whilemina
+// Top Jenis Kaunseling
 $top_jenis = $pdo->prepare("
     SELECT jenis_kaunseling, COUNT(*) AS jumlah
     FROM tempahan_kaunseling
-    WHERE kaunselor = ?
-      AND status = 'Selesai'
+    $base_where
       AND jenis_kaunseling IS NOT NULL
       AND jenis_kaunseling != ''
     GROUP BY jenis_kaunseling
     ORDER BY jumlah DESC
     LIMIT 6
 ");
-$top_jenis->execute([$kaunselor]);
+$top_jenis->execute($params_base);
 $top_jenis = $top_jenis->fetchAll(PDO::FETCH_ASSOC);
 
 // Most common jenis percentage
 $most_common_percent = 0;
-$most_common_jenis = 'Tiada Data';
 if ($total_accepted > 0 && !empty($top_jenis)) {
     $highest_count = $top_jenis[0]['jumlah'];
     $most_common_percent = round(($highest_count / $total_accepted) * 100);
-    $most_common_jenis = $top_jenis[0]['jenis_kaunseling'];
 }
 
-// Recent 10 Accepted Bookings for Whilemina
-$recent = $pdo->prepare("
-    SELECT nama, tahap, tarikh_masa, kaunselor
+// Top 10 Dominant Programs
+$top_programs = $pdo->prepare("
+    SELECT program, COUNT(*) AS jumlah
     FROM tempahan_kaunseling
-    WHERE kaunselor = ? AND status = 'Selesai'
-    ORDER BY tarikh_masa DESC
+    $base_where
+      AND program IS NOT NULL
+      AND program != ''
+    GROUP BY program
+    ORDER BY jumlah DESC
     LIMIT 10
 ");
-$recent->execute([$kaunselor]);
-$recent = $recent->fetchAll(PDO::FETCH_ASSOC);
+$top_programs->execute($params_base);
+$top_programs = $top_programs->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -98,7 +108,7 @@ $recent = $recent->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KVKaunsel - Laporan (Cg. Whilemina)</title>
+    <title>KVKaunsel Admin_3_Laporan</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -313,35 +323,6 @@ $recent = $recent->fetchAll(PDO::FETCH_ASSOC);
         .list-item:last-child { border-bottom: none; }
         .list-item strong { color: #444; }
 
-        .recent-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 16px;
-        }
-        .recent-table th {
-            text-align: left;
-            padding: 12px 16px;
-            background: var(--darkpurple);
-            color: white;
-            font-weight: 600;
-        }
-        .recent-table td {
-            padding: 14px 16px;
-            border-bottom: 1px solid #eee;
-        }
-        .recent-table tr:hover {
-            background: #f3e8ff;
-        }
-        .badge {
-            padding: 6px 12px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        .SVM { background:#fff3cd; color:#856404; }
-        .DVM { background:#d0f2ff; color:#0879a0; }
-
         /* PASSWORD MODAL STYLES */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -510,7 +491,7 @@ $recent = $recent->fetchAll(PDO::FETCH_ASSOC);
         <canvas id="monthlyChart" height="100"></canvas>
     </div>
 
-    <!-- TOP LISTS -->
+    <!-- TOP LISTS + GENDER SECTION -->
     <div class="two-cols">
         <div class="list-card">
             <h2>Jenis Kaunseling Popular</h2>
@@ -524,6 +505,54 @@ $recent = $recent->fetchAll(PDO::FETCH_ASSOC);
             <?php else: ?>
                 <p style="color:#888; text-align:center; padding:30px;">Tiada data jenis kaunseling lagi</p>
             <?php endif; ?>
+
+            <!-- Pecahan Mengikut Jantina -->
+            <div style="margin-top:40px; padding-top:24px; border-top:2px dashed #ddd;">
+                <h2>Pecahan Mengikut Jantina</h2>
+                
+                <?php if ($total_accepted > 0): ?>
+                    <!-- Lelaki -->
+                    <div class="list-item" style="align-items:center;">
+                        <div>
+                            <strong>Lelaki</strong><br>
+                            <span style="font-size:14px; color:#666;"><?= $lelaki_count ?> pelajar</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <strong style="font-size:20px; color:#2563eb;"><?= $lelaki_percent ?>%</strong>
+                        </div>
+                    </div>
+                    <div style="margin: 12px 0;">
+                        <div style="background:#eee; border-radius:12px; height:20px; overflow:hidden;">
+                            <div style="width:<?= $lelaki_percent ?>%; background:linear-gradient(90deg, #2563eb, #3b82f6); height:100%; border-radius:12px; transition:width 0.8s ease;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Perempuan -->
+                    <div class="list-item" style="align-items:center;">
+                        <div>
+                            <strong>Perempuan</strong><br>
+                            <span style="font-size:14px; color:#666;"><?= $perempuan_count ?> pelajar</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <strong style="font-size:20px; color:#ec4899;"><?= $perempuan_percent ?>%</strong>
+                        </div>
+                    </div>
+                    <div style="margin: 12px 0;">
+                        <div style="background:#eee; border-radius:12px; height:20px; overflow:hidden;">
+                            <div style="width:<?= $perempuan_percent ?>%; background:linear-gradient(90deg, #ec4899, #f43f5e); height:100%; border-radius:12px; transition:width 0.8s ease;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:24px; padding-top:16px; border-top:1px dashed #ddd; text-align:center; color:#666;">
+                        <strong>Jumlah Keseluruhan: <?= $total_accepted ?> pelajar</strong>
+                    </div>
+                <?php else: ?>
+                    <p style="color:#888; text-align:center; padding:40px;">
+                        <i class="fas fa-venus-mars" style="font-size:48px; display:block; margin-bottom:16px; color:#ccc;"></i>
+                        Belum ada data jantina dari tempahan diterima.
+                    </p>
+                <?php endif; ?>
+            </div>
         </div>
 
         <div class="list-card">
@@ -580,36 +609,22 @@ $recent = $recent->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
-    <!-- RECENT ACCEPTED SESSIONS -->
+    <!-- DOMINANT PROGRAMS SECTION -->
     <div class="chart-container">
-        <h2>Sesi Kaunseling Terbaru (10 Terkini)</h2>
-        <?php if (count($recent) > 0): ?>
-            <table class="recent-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nama Pelajar</th>
-                        <th>Tahap</th>
-                        <th>Tarikh & Masa</th>
-                        <th>Kaunselor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($recent as $i => $r): ?>
-                        <tr>
-                            <td><?= $i + 1 ?></td>
-                            <td><b><?= htmlspecialchars($r['nama']) ?></b></td>
-                            <td><span class="badge <?= $r['tahap'] ?>"><?= $r['tahap'] ?></span></td>
-                            <td><?= date('d/m/Y h:i A', strtotime($r['tarikh_masa'])) ?></td>
-                            <td><b><?= htmlspecialchars($r['kaunselor'] ?: 'Belum Ditentukan') ?></b></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+        <h2>Pecahan Mengikut Program Pelajar</h2>
+        <?php if (count($top_programs) > 0): ?>
+            <div class="list-card" style="padding:0 28px 28px;">
+                <?php foreach ($top_programs as $prog): ?>
+                    <div class="list-item">
+                        <span><?= htmlspecialchars($prog['program'] ?: 'Tiada Nama Program') ?></span>
+                        <strong><?= $prog['jumlah'] ?> tempahan diterima</strong>
+                    </div>
+                <?php endforeach; ?>
+            </div>
         <?php else: ?>
             <p style="text-align:center; color:#888; padding:50px; font-size:18px;">
-                <i class="fas fa-calendar-times" style="font-size:48px; display:block; margin-bottom:20px; color:#ccc;"></i>
-                Tiada sesi kaunseling diterima lagi.
+                <i class="fas fa-graduation-cap" style="font-size:48px; display:block; margin-bottom:20px; color:#ccc;"></i>
+                Tiada data program dari tempahan diterima lagi.
             </p>
         <?php endif; ?>
     </div>
@@ -617,7 +632,7 @@ $recent = $recent->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Profile dropdown and password modal (same as before)
+    // Profile dropdown
     const profileDropdown = document.getElementById('profileDropdown');
     const profileMenu = document.getElementById('profileMenu');
 
@@ -634,6 +649,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Password modal functions
     window.openChangePasswordModal = function() {
         document.getElementById('passwordModal').style.display = 'flex';
         document.getElementById('profileMenu').style.display = 'none';
@@ -661,7 +677,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // Monthly Chart
+    // Monthly Trend Chart
     const ctx = document.getElementById('monthlyChart').getContext('2d');
     new Chart(ctx, {
         type: 'line',

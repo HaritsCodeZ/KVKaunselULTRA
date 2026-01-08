@@ -1,14 +1,20 @@
 <?php
 session_start();
 
-// Security: Only allow access if logged in and is Whilemina
-if (!isset($_SESSION['kaunselor_id']) || $_SESSION['counselor_full_name'] !== 'Whilemina Thimah Gregory Anak Jimbun') {
+// Security: Only allow access if logged in
+if (!isset($_SESSION['kaunselor_id'])) {
     header("Location: UltimateLoginPage.php");
     exit;
 }
 
-$admin_name = $_SESSION['counselor_short_name'] ?? "Cg. Whilemina";
+// Use the exact name from session — this is more reliable and consistent
+$admin_name = $_SESSION['counselor_short_name'] ?? "Cikgu Whilemina";
+$counselor_full_name = $_SESSION['counselor_full_name'] ?? "Whilemina Thimah Gregory Anak Jimbun";
 
+// Optional: Extra safety — if session name is empty, fallback to known name
+if (empty($counselor_full_name)) {
+    $counselor_full_name = "Whilemina Thimah Gregory Anak Jimbun";
+}
 // Database connection
 try {
     $pdo = new PDO("mysql:host=localhost;dbname=kvkaunsel_db", "root", "");
@@ -17,9 +23,7 @@ try {
     die("Connection failed: " . $e->getMessage());
 }
 
-$kaunselor = 'Whilemina Thimah Gregory Anak Jimbun';
-
-// === PUBLIC HOMEPAGE VISIT COUNTER (shared across all counselors) ===
+// === PUBLIC HOMEPAGE VISIT COUNTER (global) ===
 try {
     $total_kunjungan = $pdo->query("SELECT COUNT(*) FROM page_visits")->fetchColumn();
     $kunjungan_hari_ini = $pdo->query("SELECT COUNT(*) FROM page_visits WHERE visit_date = CURDATE()")->fetchColumn();
@@ -32,7 +36,7 @@ try {
     $total_kunjungan = $kunjungan_hari_ini = $kunjungan_bulan_ini = 0;
 }
 
-// === TOTAL REGISTERED STUDENTS (shared) ===
+// === TOTAL REGISTERED STUDENTS (global) ===
 try {
     $total_pelajar_baru = $pdo->query("SELECT COUNT(*) FROM students")->fetchColumn();
 } catch (Exception $e) {
@@ -43,20 +47,20 @@ try {
 $stmt_recent = $pdo->prepare("
     SELECT nama, tarikh_masa, jenis_kaunseling, status, tarikh_tempahan
     FROM tempahan_kaunseling 
-    WHERE kaunselor = ?
+    WHERE kaunselor = :kaunselor
     ORDER BY tarikh_tempahan DESC 
     LIMIT 5
 ");
-$stmt_recent->execute([$kaunselor]);
+$stmt_recent->execute([':kaunselor' => $counselor_full_name]);
 $recent_students = $stmt_recent->fetchAll(PDO::FETCH_ASSOC);
 
 // Counseling metrics — ONLY for Whilemina
-$stmt_selesai = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling WHERE kaunselor = ? AND status = 'Selesai'");
-$stmt_selesai->execute([$kaunselor]);
+$stmt_selesai = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling WHERE kaunselor = :kaunselor AND status = 'Selesai'");
+$stmt_selesai->execute([':kaunselor' => $counselor_full_name]);
 $total_sesi_selesai = $stmt_selesai->fetchColumn();
 
-$stmt_aktif = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling WHERE kaunselor = ? AND status != 'Selesai'");
-$stmt_aktif->execute([$kaunselor]);
+$stmt_aktif = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling WHERE kaunselor = :kaunselor AND status != 'Selesai'");
+$stmt_aktif->execute([':kaunselor' => $counselor_full_name]);
 $kes_aktif = $stmt_aktif->fetchColumn();
 ?>
 
@@ -64,7 +68,7 @@ $kes_aktif = $stmt_aktif->fetchColumn();
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
-    <title>KVKaunsel - Cg. Whilemina (Laman Utama)</title>
+    <title>KVKaunsel Admin_3_Utama</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -407,7 +411,7 @@ $kes_aktif = $stmt_aktif->fetchColumn();
         <h1>KVKaunsel - Utama</h1>
         <div class="info">
             Selamat Datang!<br>
-            <b>Panel Kaunselor: Cg. Whilemina Thimah Gregory Anak Jimbun</b>
+            <b>Panel Kaunselor: <?= htmlspecialchars($counselor_full_name) ?></b>
         </div>
     </div>
 
@@ -425,13 +429,13 @@ $kes_aktif = $stmt_aktif->fetchColumn();
             <div class="icon-circle"><i class="fas fa-calendar-check"></i></div>
             <h3>Jumlah Sesi</h3>
             <div class="number"><?= number_format($total_sesi_selesai) ?></div>
-            <div class="change">Sesi yang telah selesai</div>
+            <div class="change">Sesi yang telah selesai (anda)</div>
         </div>
         <div class="metric-card">
             <div class="icon-circle"><i class="fas fa-folder-open"></i></div>
             <h3>Kes Aktif</h3>
             <div class="number"><?= number_format($kes_aktif) ?></div>
-            <div class="change positive">Belum selesai / menunggu</div>
+            <div class="change positive">Belum selesai / menunggu (anda)</div>
         </div>
         <div class="metric-card new-student">
             <div class="icon-circle"><i class="fas fa-user-plus"></i></div>
@@ -442,7 +446,7 @@ $kes_aktif = $stmt_aktif->fetchColumn();
     </div>
 
     <div class="left-card" onclick="window.location.href='KVK_Admin_CgWhilemina_Tempahan.php'">
-        <h3>Pelajar Terkini 
+        <h3>Pelajar Terkini (Anda)
             <span style="font-size: 14px; color: #8b5cf6; float: right; font-weight: 500;">Lihat Semua →</span>
         </h3>
 
@@ -470,7 +474,7 @@ $kes_aktif = $stmt_aktif->fetchColumn();
             <?php endforeach; ?>
         </table>
         <?php else: ?>
-        <p style="text-align:center;color:#888;padding:60px 0;">Tiada tempahan terkini</p>
+        <p style="text-align:center;color:#888;padding:60px 0;">Tiada tempahan terkini untuk anda</p>
         <?php endif; ?>
 
         <div style="text-align: center; margin-top: 40px; color: #999; font-size: 14px;">
