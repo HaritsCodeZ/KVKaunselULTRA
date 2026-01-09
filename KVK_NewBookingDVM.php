@@ -394,7 +394,7 @@ function submitBooking() {
     // Tambah student_id dari session (hidden input yang PHP generate)
     f.append('student_id', '<?php echo $_SESSION['student_id'] ?? ''; ?>');  // <-- Ini yang hilang!
     
-    f.append('tahap', 'SVM');  // atau 'DVM' untuk file DVM
+    f.append('tahap', 'DVM');  // atau 'DVM' untuk file DVM
     f.append('nama', document.querySelector('#step1 input[name="nama"]').value);
     f.append('program', document.querySelector('#step1 select[name="program"]').value);
     f.append('semester', document.querySelector('#step1 select[name="semester"]').value);

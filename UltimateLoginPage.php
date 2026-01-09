@@ -169,6 +169,94 @@ unset($_SESSION['error']);
     color: #af74b1;
     transform: translateY(-50%) scale(1.15);
 }
+
+/* Enhanced Creative Pill Design */
+.forgot-pill {
+    position: fixed;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: 620px;
+    max-width: 90%;
+    /* Initial state for animation */
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.forgot-pill.show {
+    opacity: 1;
+    pointer-events: auto;
+    top: 10px; /* Bounces up slightly when appearing */
+}
+
+.pill-content {
+    background: rgba(45, 12, 50, 0.85); /* Deep dark purple for high contrast */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 25px;
+    text-align: center;
+    border: 2px solid #dfa5e4; /* Light purple border for pop */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 20px rgba(175, 116, 177, 0.3);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Creative Gradient Accent Line */
+.pill-content::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #af74b1, #ffffff, #af74b1);
+}
+
+.pill-content p {
+    margin: 5px 0;
+    line-height: 1.4;
+    font-size: 0.95rem;
+}
+
+.pill-content strong {
+    color: #f0c4f3;
+    font-size: 1.2rem;
+    display: block;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.phone-number {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 12px;
+    margin: 15px 0 !important;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem !important;
+    border: 1px dashed rgba(255,255,255,0.3);
+}
+
+.close-pill {
+    background: #fff;
+    color: #4b234d;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.close-pill:hover {
+    background: #af74b1;
+    color: white;
+    transform: scale(1.05);
+}
     </style>
 </head>
 <body>
@@ -229,7 +317,7 @@ unset($_SESSION['error']);
         <?php echo $error; ?>
     </div>
 <?php endif; ?>
-        <a href="#">Lupa Kata Laluan?</a>
+        <a href="#" onclick="showForgotPill(); return false;">Lupa Kata Laluan?</a>
         
         <button type="submit" name="login">Log Masuk</button>
     </form>
@@ -248,6 +336,16 @@ unset($_SESSION['error']);
                 <button class="hidden" id="register" type="button">Daftar Sekarang</button>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Forgot Password Notification (Pill Style) -->
+<div id="forgotNotification" class="forgot-pill" style="display:none;">
+    <div class="pill-content">
+        <p><strong>Lupa Kata Laluan?</strong></p>
+        <p>Sila hubungi pentadbir sistem bagi tetapan semula kata laluan.</p>
+        <p class="phone-number">No. Telefon/WhatsApp: <strong>011-19861202 - Cikgu Muhirman</strong></p>
+        <button class="close-pill" onclick="closeForgotPill()">Tutup</button>
     </div>
 </div>
 
@@ -276,6 +374,35 @@ function togglePass(inputId, icon) {
     }
 }
 
+let pillTimer; // Variable to store the timer
+
+function showForgotPill() {
+    const pill = document.getElementById('forgotNotification');
+    
+    // Clear any existing timer if user clicks again
+    clearTimeout(pillTimer);
+    
+    // Show the pill using a class for the CSS transition
+    pill.style.display = 'block';
+    setTimeout(() => pill.classList.add('show'), 10); 
+
+    // Auto-fade after 10 seconds (10000ms)
+    pillTimer = setTimeout(() => {
+        closeForgotPill();
+    }, 6000);
+}
+
+function closeForgotPill() {
+    const pill = document.getElementById('forgotNotification');
+    pill.classList.remove('show');
+    
+    // Wait for the CSS transition to finish before hiding display
+    setTimeout(() => {
+        if(!pill.classList.contains('show')) {
+            pill.style.display = 'none';
+        }
+    }, 500);
+}
 
 </script>
 </body>

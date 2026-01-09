@@ -175,7 +175,7 @@ try {
   .college-name{
   position:absolute;
   transform: translateY(559px);     /* naik = nilai negatif */
-  right:277px;
+  right:170px;
   background:rgba(0,0,0,0.4);
   backdrop-filter:blur(10px);
   padding:10px 20px;
@@ -273,7 +273,9 @@ try {
           <a href="UltimateLoginPage.php">
     <button class="btn-primary">Tempah Sesi Sekarang</button>
             </a>
-          <button class="btn-secondary">Kenali Ahli Kumpulan</button>
+          <button class="btn-secondary" onclick="window.location.href='KVK_TeamKVKaunsel.php'">
+    Kenali Sistem KVKaunsel
+</button>
         </div>
         <div class="trust">
           UNIT PSIKOLOGI DAN KERJAYA<br>

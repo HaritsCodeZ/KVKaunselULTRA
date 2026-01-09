@@ -7,7 +7,7 @@ if (basename($_SERVER['PHP_SELF']) === 'UltimateLoginPage.php') {
 
 <style>
     :root { 
-        --accent: #8C5C8D; 
+        --accent: #8c5c8d; 
         --ease: cubic-bezier(0.4, 0, 0.2, 1); 
     }
 
@@ -18,9 +18,9 @@ if (basename($_SERVER['PHP_SELF']) === 'UltimateLoginPage.php') {
         left:50%;
         transform:translateX(-50%);
         width:calc(100% - 80px);
-        max-width:1000px;
+        max-width:1280px;
         z-index:9999;
-        padding:14px 32px;
+        padding:14px 24px;
         border-radius:50px;
         display:flex;
         justify-content:space-between;
@@ -216,7 +216,6 @@ if (basename($_SERVER['PHP_SELF']) === 'UltimateLoginPage.php') {
 <header class="navbar" id="navbar">
     <div class="nav-left" onclick="location.href='KVK_Homepage.php'">
         <img src="ImageGalleries/KVKaunsel_Logo-New.png" alt="KVKaunsel Logo">
-        <img src="ImageGalleries/LOGO_PRS_RELOADED.png" alt="PRS Logo">
         <div class="logo-text">KVKaunsel</div>
     </div>
 

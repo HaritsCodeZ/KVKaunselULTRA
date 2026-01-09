@@ -412,10 +412,6 @@ foreach ($bookings as $booking) {
     </div>
 
     <?php if (empty($events)): ?>
-        <div style="text-align:center; padding:40px; color:#666; font-size:18px;">
-            Tiada temujanji yang diluluskan lagi.<br>
-            Selepas anda meluluskan tempahan pelajar, ia akan muncul di sini secara automatik.
-        </div>
     <?php endif; ?>
 
     <div id="calendar"></div>

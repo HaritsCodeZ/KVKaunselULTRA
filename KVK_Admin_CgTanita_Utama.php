@@ -60,7 +60,12 @@ $stmt_selesai = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling WHERE ka
 $stmt_selesai->execute([':kaunselor' => $counselor_full_name]);
 $total_sesi_selesai = $stmt_selesai->fetchColumn();
 
-$stmt_aktif = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling WHERE kaunselor = :kaunselor AND status != 'Selesai'");
+$stmt_aktif = $pdo->prepare("
+    SELECT COUNT(*) 
+    FROM tempahan_kaunseling 
+    WHERE status = 'Baru' 
+      AND kaunselor = :kaunselor
+");
 $stmt_aktif->execute([':kaunselor' => $counselor_full_name]);
 $kes_aktif = $stmt_aktif->fetchColumn();
 ?>

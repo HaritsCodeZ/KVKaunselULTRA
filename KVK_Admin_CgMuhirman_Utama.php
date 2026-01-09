@@ -56,7 +56,12 @@ $stmt_selesai = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling WHERE st
 $stmt_selesai->execute([':kaunselor' => $counselor_full_name]);
 $total_sesi_selesai = $stmt_selesai->fetchColumn();
 
-$stmt_aktif = $pdo->prepare("SELECT COUNT(*) FROM tempahan_kaunseling WHERE status != 'Selesai' AND kaunselor = :kaunselor");
+$stmt_aktif = $pdo->prepare("
+    SELECT COUNT(*) 
+    FROM tempahan_kaunseling 
+    WHERE status = 'Baru' 
+      AND kaunselor = :kaunselor
+");
 $stmt_aktif->execute([':kaunselor' => $counselor_full_name]);
 $kes_aktif = $stmt_aktif->fetchColumn();
 ?>
@@ -426,7 +431,7 @@ $kes_aktif = $stmt_aktif->fetchColumn();
             <div class="icon-circle"><i class="fas fa-calendar-check"></i></div>
             <h3>Jumlah Sesi</h3>
             <div class="number"><?= number_format($total_sesi_selesai) ?></div>
-            <div class="change">Sesi yang telah selesai (anda)</div>
+            <div class="change">Sesi yang telah diterima (anda)</div>
         </div>
         <div class="metric-card">
             <div class="icon-circle"><i class="fas fa-folder-open"></i></div>
