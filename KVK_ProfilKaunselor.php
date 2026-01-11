@@ -51,6 +51,8 @@ session_start();  // PENTING! Letak di atas sekali
         .profile:nth-child(even){flex-direction:row-reverse}
         .profile:hover img{transform:scale(1.1)}
 
+
+        
         .profile-img{
             width:380px;height:500px;border-radius:32px;overflow:hidden;
             border:8px solid #fff;box-shadow:0 20px 50px rgba(0,0,0,0.25);flex-shrink:0;
@@ -105,31 +107,31 @@ session_start();  // PENTING! Letak di atas sekali
 
     <div class="counselors">
         <div class="profile">
-            <div class="profile-img"><img src="ImageGalleries/" alt="En. Muhirman"></div>
+            <div class="profile-img"><img src="Team/CikguMuhirman_jpeg-removebg-preview.png" alt="En. Muhirman"></div>
             <div class="profile-info">
-                <h3>En. Muhirman Bin Mu-Alim</h3>
+                <h3>En. Muhirman Bin <br>Mu-Alim</h3>
                 <div class="title">Ketua Unit Kaunseling & PRS</div>
-                <p>Dengan pendekatan terapi seni dan mindfulness, beliau membantu anda menemui warna sebenar dalam hidup. Sesuai untuk remaja dan mereka yang ingin “healing” secara kreatif.</p>
+                <p>Beliau berpengalaman dalam bidang bimbingan dan kaunseling dengan penekanan terhadap pendekatan terapi seni dan mindfulness. Pendekatan ini memberi ruang kepada individu untuk meneroka emosi, mengurus tekanan serta membina keseimbangan diri melalui kaedah yang kreatif dan berstruktur.</p>
                 <a href="https://wa.me/60123456789" class="whatsapp-btn" target="_blank">Hubungi En. Muhirman</a>
             </div>
         </div>
 
         <div class="profile">
-            <div class="profile-img"><img src="ImageGalleries/Cikgu Tanita.jpg" alt="Pn. Tanita"></div>
+            <div class="profile-img"><img src="Team/CikguTanita.jpeg" alt="Pn. Tanita"></div>
             <div class="profile-info">
                 <h3>Pn. Tanita Anak Numpang</h3>
-                <div class="title">Kaunselor Lembut & Penuh Empati</div>
-                <p>Suara dan auranya sangat menenangkan. Ramai pelajar berkata sesi dengan beliau seperti “berbual dengan kakak sendiri”. Pakar dalam isu emosi dan tekanan.</p>
+                <div class="title">Kaunselor</div>
+                <p>Beliau merupakan kaunselor yang berpengalaman dalam membantu pelajar mengurus isu emosi dan tekanan. Pendekatan kaunseling yang tenang dan berfokus kepada kesejahteraan emosi membantu pelajar berasa selesa untuk berkongsi serta memahami diri dengan lebih baik.</p>
                 <a href="https://wa.me/60198765432" class="whatsapp-btn" target="_blank">Hubungi Pn. Tanita</a>
             </div>
         </div>
 
         <div class="profile">
-            <div class="profile-img"><img src="ImageGalleries/Cikgu Whilemina.jpg" alt="Pn. Whilemina"></div>
+            <div class="profile-img"><img src="Team/CikguWhilemina.jpg-removebg-preview.png" alt="Pn. Whilemina"></div>
             <div class="profile-info">
                 <h3>Pn. Whilemina Anak Gregory Jimbun</h3>
-                <div class="title">Kaunselor Kreatif & Penyembuh Jiwa</div>
-                <p>Gaya anggun, pemikiran mendalam. Berpengalaman 18 tahun dalam kaunseling kerjaya, trauma dan pembangunan diri. Idola ramai pelajar senior.</p>
+                <div class="title">Kaunselor</div>
+                <p>Beliau merupakan kaunselor berpengalaman dengan lebih 18 tahun dalam bidang kaunseling, khususnya dalam kaunseling kerjaya, pengurusan trauma dan pembangunan diri. Kepakaran serta pendekatan yang matang dan berfokus membantu pelajar membuat perancangan masa depan dengan lebih jelas serta membina kekuatan dalaman secara berperingkat.</p>
                 <a href="https://wa.me/60111222333" class="whatsapp-btn" target="_blank">Hubungi Pn. Whilemina</a>
             </div>
         </div>

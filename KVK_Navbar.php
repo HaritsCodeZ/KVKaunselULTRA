@@ -223,17 +223,16 @@ if (basename($_SERVER['PHP_SELF']) === 'UltimateLoginPage.php') {
         <div class="nav-item">
             <div class="nav-btn" onclick="toggleDropdown(this)">Perkhidmatan Kami <span class="chev">▼</span></div>
             <div class="dropdown">
-                <a href="#">Tempahan Sesi</a>
-                <a href="#">Aktiviti Bulanan</a>
-                <a href="#">TribbieAI - AI Kaunseling</a>
+                <a href="KVK_AktivitiPrs.php">Aktiviti Kaunseling</a>
+                <a href="KVK_TribbieAI.php">TribbieAI - AI Kaunseling</a>
             </div>
         </div>
         
         <div class="nav-item">
-            <div class="nav-btn" onclick="toggleDropdown(this)">Profil Kaunselor & PRS <span class="chev">▼</span></div>
+            <div class="nav-btn" onclick="toggleDropdown(this)">Profil Kaunselor & Ujian <span class="chev">▼</span></div>
             <div class="dropdown">
                 <a href="KVK_ProfilKaunselor.php">Panel Kaunselor</a>
-                <a href="#">Ahli Pembimbing Rakan Sebaya</a>
+                <a href="https://mentari.moh.gov.my/malay/self-test/" target="_blank">Ujian Kendiri</a>
             </div>
         </div>
 

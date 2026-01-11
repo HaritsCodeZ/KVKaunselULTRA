@@ -237,17 +237,16 @@ try {
       <div class="nav-item" id="services-item">
         <div class="nav-btn dropdown-toggle">Perkhidmatan Kami <span class="chev">▼</span></div>
         <div class="dropdown">
-          <a href="#">Tempahan Sesi</a>
-          <a href="#">Aktiviti Bulanan</a>
-          <a href="#">TribbieAI - AI Kaunseling</a>
+          <a href="KVK_AktivitiPrs.php">Aktiviti Kaunseling</a>
+          <a href="KVK_TribbieAI.php">TribbieAI - AI Kaunseling</a>
         </div>
       </div>
 
       <div class="nav-item" id="panel-item">
-        <div class="nav-btn dropdown-toggle">Profil Kaunselor & PRS <span class="chev">▼</span></div>
+        <div class="nav-btn dropdown-toggle">Profil Kaunselor & Ujian <span class="chev">▼</span></div>
         <div class="dropdown">
           <a href="KVK_ProfilKaunselor.php">Panel Kaunselor</a>
-          <a href="#">Ahli Pembimbing Rakan Sebaya</a>
+          <a href="https://mentari.moh.gov.my/malay/self-test/" target="_blank">Ujian Kendiri</a>
         </div>
       </div>
 

@@ -299,7 +299,7 @@
                 <div class="member-name">Nur Cahaya Az-Zahra Binti Suaidie</div>
                 <div class="member-role">Technical Writer</div>
                 <p class="member-bio">
-                    Mereka bentuk antara muka KVKaunsel yang premium dengan tumpuan kepada pengalaman pengguna.
+                    Menyediakan dokumentasi teknikal yang jelas dan teratur seperti laporan sistem, dan dokumentasi projek bagi memudahkan pemahaman pengguna dan pembangun.
                 </p>
                 <div class="social-links">
                     <a href="https://wa.me/601121446026" target="_blank"><i class="fab fa-whatsapp"></i></a>
@@ -315,7 +315,7 @@
                 <div class="member-name">Muhammad Harits Fikri Bin Hassan</div>
                 <div class="member-role">Full Stack Developer (KetuaKumpulan)</div>
                 <p class="member-bio">
-                    Bertanggungjawab membangunkan modul pelajar, kaunselor dan pentadbir sistem KVKaunsel.
+                    Bertanggungjawab membangunkan dan menyelenggara sistem dari segi front-end dan back-end, termasuk reka bentuk antaramuka, logik sistem, serta pengurusan pangkalan data.
                 </p>
                 <div class="social-links">
                     <a href="https://wa.me/60198102571" target="_blank"><i class="fab fa-whatsapp"></i></a>     
@@ -327,13 +327,13 @@
 
         <div class="member-card">
             <div class="member-photo">
-                <img src="team/student2.jpg" alt="Nur Cahaya Az-Zahra">
+                <img src="team/student2.jpg" alt="SHarfik">
             </div>
             <div class="member-info">
                 <div class="member-name">Mohd Sharfik Bin Hamid</div>
                 <div class="member-role">Asisstant Technical Writer</div>
                 <p class="member-bio">
-                    Mereka bentuk antara muka KVKaunsel yang premium dengan tumpuan kepada pengalaman pengguna.
+                    Membantu Technical Writer dalam menyediakan, menyemak, dan mengemaskini dokumentasi teknikal serta memastikan kandungan adalah tepat, konsisten, dan mudah difahami.
                 </p>
                 <div class="social-links">
                     <a href="https://wa.me/60149303688" target="_blank"><i class="fab fa-whatsapp"></i></a>
