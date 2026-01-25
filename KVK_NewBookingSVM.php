@@ -276,7 +276,7 @@
                 <div class="form-group"><label>Program Anda</label>
                     <select name="program" required>
                         <option value="" disabled selected>Pilih program anda</option>
-                        <option>Program Teknologi Elektrik</option><option>Perkaunan</option><option>Program Sistem Komputer Dan Rangkaian</option>
+                        <option>Program Teknologi Elektrik</option><option>Perkaunan</option><option>Program Sistem Komputer Dan Rangkaian</option><option>Program Teknologi Pembinaan</option>
                         <option>Program Hospitaliti Seni Kulinari</option><option>Program Teknologi Automotif</option><option>Program Teknologi Kimpalan</option>
                         <option>Program Teknologi Pemesinan Industri</option>
                     </select>
@@ -295,7 +295,7 @@
         <div class="form-area" id="step2">
             <form onsubmit="return false;">
                 <div class="form-group"><label>Jantina Anda</label><select name="jantina" required><option value="" disabled selected>Pilih jantina</option><option>Lelaki</option><option>Perempuan</option></select></div>
-                <div class="form-group"><label>Kaum Anda</label><select name="kaum" required><option value="" disabled selected>Pilih kaum</option><option>Melayu</option><option>Cina</option><option>Bumiputera</option><option>Lain-lain</option></select></div>
+                <div class="form-group"><label>Kaum Anda</label><select name="kaum" required><option value="" disabled selected>Pilih kaum</option><option>Melayu</option><option>Iban</option><option>Cina</option><option>Bumiputera</option><option>Lain-lain</option></select></div>
                 <div class="form-group"><label>No Telefon Anda</label><input type="tel" name="telefon" required placeholder="Contoh: 60123456789" pattern="[0-9]{10,12}"></div>
                 <div class="button-group">
                     <button type="button" class="btn-kembali" onclick="nextStep(1)">Kembali</button>
@@ -355,9 +355,10 @@
     <div style="font-size:110px; color:#27ae60; margin-bottom:20px;">✔</div>
     <h1 style="font-size:78px; font-weight:900; color:#AF74B1; margin:15px 0;">Terima Kasih!</h1>
     <p style="font-size:28px; color:#333; line-height:1.6; margin-bottom:40px;">
-        Tempahan anda telah berjaya dihantar.<br>
-        Kaunselor akan menghubungi anda melalui KaunselMel<br>
-        dalam masa <strong>24 jam</strong>.
+                        Tempahan anda telah berjaya dihantar.<br>
+                        Kaunselor akan menghubungi anda melalui Whatsapp<br>
+                        dalam masa <strong>yang terdekat</strong>.
+                    </p>
     </p>
     <button type="button" class="btn-success-dashboard" 
         onclick="location.href='KVK_Registration.php'">

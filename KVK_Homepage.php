@@ -102,7 +102,7 @@ try {
   font-size: 1.25rem;
   font-weight: 800;
   border-radius: 60px;
-  background: linear-gradient(135deg, #7f3ca8, #b84592, #ff6b6b);
+  background: linear-gradient(135deg, #FFD166, #b84592, #ff6b6b);
   background-size: 200% 200%;
   color: white;
   border: none;

@@ -371,6 +371,9 @@ $kes_aktif = $stmt_aktif->fetchColumn();
          onclick="location.href='KVK_Admin_CgTanita_Laporan.php'">
         <i class="fas fa-chart-line"></i><span>Laporan</span>
     </div>
+    <div class="menu-item" onclick="openInviteModal()">
+    <i class="fas fa-ticket-alt"></i><span>Kod Jemputan</span>
+</div>
 </div>
 
 <!-- PASSWORD CHANGE MODAL -->
@@ -489,6 +492,28 @@ $kes_aktif = $stmt_aktif->fetchColumn();
     </div>
 </div>
 
+<div id="inviteModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Jana Kod Jemputan</h3>
+            <span class="close-modal" onclick="closeInviteModal()">&times;</span>
+        </div>
+        <div style="padding: 30px; text-align: center;">
+            <p style="margin-bottom: 20px; color: #666;">Klik butang di bawah untuk menjana kod pendaftaran baru bagi pelajar.</p>
+            
+            <div id="displayArea" style="display:none; background: #f0f7ff; border: 2px dashed var(--purple); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                <span style="font-size: 12px; color: var(--purple); font-weight: 700; text-transform: uppercase;">Kod Anda:</span>
+                <div id="generatedCode" style="font-size: 40px; font-weight: 800; color: #333; letter-spacing: 5px; margin: 10px 0;"></div>
+                <small style="color: #ec4899;">*Sah untuk 3 minit sahaja</small>
+            </div>
+
+            <button type="button" onclick="generateInvite()" id="btnGenerate" class="btn-save" style="width: 100%; margin: 0; padding: 15px;">
+                <i class="fas fa-magic"></i> Jana Kod Sekarang
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const profileDropdown = document.getElementById('profileDropdown');
@@ -561,6 +586,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+function openInviteModal() {
+    document.getElementById('inviteModal').style.display = 'flex';
+    document.getElementById('displayArea').style.display = 'none';
+    document.getElementById('btnGenerate').style.display = 'block';
+}
+
+function closeInviteModal() {
+    document.getElementById('inviteModal').style.display = 'none';
+}
+
+function generateInvite() {
+    // Kita hantar request ke fail PHP baru untuk simpan kod dalam DB
+    fetch('generate_code_logic.php')
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            document.getElementById('generatedCode').innerText = data.code;
+            document.getElementById('displayArea').style.display = 'block';
+            document.getElementById('btnGenerate').style.display = 'none';
+        } else {
+            alert("Ralat menjana kod!");
+        }
+    });
+}
 </script>
 
 </body>

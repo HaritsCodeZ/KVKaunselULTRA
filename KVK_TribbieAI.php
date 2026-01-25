@@ -444,7 +444,6 @@ session_start();  // PENTING! Letak di atas sekali
                     <div class="plus-button" id="plusBtn">+</div>
                     <div class="menu-dropdown" id="menuDropdown">
                         <div class="menu-item">Chat Baru</div>
-                        <div class="menu-item">Main Dengan Tribbie</div>
                     </div>
                     <input type="text" id="userInput" placeholder="Apa yang awak nak tanya saya?" autocomplete="off">
                     <div class="send-button" id="sendBtn">➤</div>
@@ -783,7 +782,7 @@ if (
 ) {
     return (
         "Hai awaknya! 👋 Apa khabar awak? 😎<br/><br/>" +
-        "Nak borak apa hari ni? Cer cite lah dengan Tribbie! ✨"
+        "Nak borak apa hari ni? Cer cite lah dengan Tribbie! Mana tau saya boleh bagi tips? ✨"
     );
 }
 

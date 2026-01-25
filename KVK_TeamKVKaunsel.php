@@ -327,7 +327,7 @@
 
         <div class="member-card">
             <div class="member-photo">
-                <img src="team/student2.jpg" alt="SHarfik">
+                <img src="team/Sharfik.jpeg" alt="SHarfik">
             </div>
             <div class="member-info">
                 <div class="member-name">Mohd Sharfik Bin Hamid</div>

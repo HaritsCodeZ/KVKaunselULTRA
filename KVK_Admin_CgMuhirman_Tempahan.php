@@ -496,6 +496,35 @@ $today_count = $today_stmt->fetchColumn();
         .btn-cancel { background: #eee; color: #666; }
         .btn-save { background: var(--purple); color: white; }
         .btn-save:hover { background: #7c4dff; }
+
+        @keyframes whitePulse {
+    0% {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        opacity: 0.8;
+    }
+    50% {
+        text-shadow: 0 0 20px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.6);
+        opacity: 1;
+        transform: scale(1.02);
+    }
+    100% {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        opacity: 0.8;
+    }
+}
+
+.pulse-text {
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    color: white;
+    width: 100%;
+    font-weight: bold;
+    display: block;
+    animation: whitePulse 2s infinite ease-in-out;
+    transition: transform 0.3s ease;
+}
+
     </style>
 </head>
 <body>
@@ -536,6 +565,9 @@ $today_count = $today_stmt->fetchColumn();
     <a href="KVK_Admin_CgMuhirman_Laporan.php" class="menu-item <?= basename($_SERVER['PHP_SELF']) == 'KVK_Admin_CgMuhirman_Laporan.php' ? 'active' : '' ?>">
         <i class="fas fa-chart-line"></i><span>Laporan</span>
     </a>
+        <div class="pulse-text">
+    Dapatkan Kod Jemputan Di Laman Utama!
+</div>
 </div>
 
 <!-- PASSWORD CHANGE MODAL -->
@@ -623,7 +655,7 @@ $today_count = $today_stmt->fetchColumn();
                 <th>Tarikh & Masa Yang Diinginkan</th>
                 <th>Jenis Sesi</th>
                 <th>Kaunselor</th>
-                <th>Sebab Ringkas</th>
+                <th>Angka Giliran</th>
                 <th>Status</th>
                 <th>Ditempah Pada</th>
             </tr>
@@ -631,22 +663,22 @@ $today_count = $today_stmt->fetchColumn();
         <tbody>
             <?php foreach($data as $i => $r): ?>
             <tr class="booking-row"
-                data-id="<?= $r['id'] ?>"
-                data-nama="<?= htmlspecialchars($r['nama'], ENT_QUOTES) ?>"
-                data-tahap="<?= $r['tahap'] ?>"
-                data-program="<?= htmlspecialchars($r['program'], ENT_QUOTES) ?>"
-                data-semester="<?= $r['semester'] ?>"
-                data-telefon="<?= $r['telefon'] ?>"
-                data-jantina="<?= $r['jantina'] ?>"
-                data-kaum="<?= $r['kaum'] ?>"
-                data-tarikh="<?= date('d/m/Y h:i A', strtotime($r['tarikh_masa'])) ?>"
-                data-jenis_sesi="<?= $r['jenis_sesi'] ?>"
-                data-jenis_kaunseling="<?= htmlspecialchars($r['jenis_kaunseling'], ENT_QUOTES) ?>"
-                data-kaunselor="<?= htmlspecialchars($r['kaunselor'], ENT_QUOTES) ?>"
-                data-sebab="<?= htmlspecialchars($r['sebab'], ENT_QUOTES) ?>"
-                data-status="<?= $r['status'] ?>"
-                style="cursor:pointer"
-                onclick="event.preventDefault(); event.stopPropagation(); openBookingModal(this.dataset);">
+    data-id="<?= $r['id'] ?>"
+    data-nama="<?= htmlspecialchars($r['nama'], ENT_QUOTES) ?>"
+    data-student_id="<?= htmlspecialchars($r['student_id'], ENT_QUOTES) ?>" data-tahap="<?= $r['tahap'] ?>"
+    data-program="<?= htmlspecialchars($r['program'], ENT_QUOTES) ?>"
+    data-semester="<?= $r['semester'] ?>"
+    data-telefon="<?= $r['telefon'] ?>"
+    data-jantina="<?= $r['jantina'] ?>"
+    data-kaum="<?= $r['kaum'] ?>"
+    data-tarikh="<?= date('d/m/Y h:i A', strtotime($r['tarikh_masa'])) ?>"
+    data-jenis_sesi="<?= $r['jenis_sesi'] ?>"
+    data-jenis_kaunseling="<?= htmlspecialchars($r['jenis_kaunseling'], ENT_QUOTES) ?>"
+    data-kaunselor="<?= htmlspecialchars($r['kaunselor'], ENT_QUOTES) ?>"
+    data-sebab="<?= htmlspecialchars($r['sebab'], ENT_QUOTES) ?>"
+    data-status="<?= $r['status'] ?>"
+    style="cursor:pointer"
+    onclick="event.preventDefault(); event.stopPropagation(); openBookingModal(this.dataset);">
                 <td><?= $i+1 ?></td>
                 <td>
                     <span class="badge <?= 
@@ -667,8 +699,8 @@ $today_count = $today_stmt->fetchColumn();
                 <td><b><?= date('d/m/Y', strtotime($r['tarikh_masa'])) ?><br><?= date('h:i A', strtotime($r['tarikh_masa'])) ?></b></td>
                 <td><?= $r['jenis_sesi'] ?><br><small><?= $r['jenis_kaunseling'] ?></small></td>
                 <td><b><?= htmlspecialchars($r['kaunselor']) ?></b></td>
-                <td style="max-width:200px;white-space:normal;">
-                    <?= strlen($r['sebab']) > 60 ? substr(htmlspecialchars($r['sebab']),0,60).'...' : htmlspecialchars($r['sebab']) ?>
+                <td style="font-weight: bold; color: var(--black);">
+                <?= htmlspecialchars($r['student_id']) ?>
                 </td>
                 <td><span class="badge <?= $r['status']=='Baru'?'Baru':$r['status'] ?>"><?= $r['status'] ?></span></td>
                 <td><?= date('d/m/Y H:i', strtotime($r['tarikh_tempahan'])) ?></td>
@@ -724,6 +756,8 @@ $today_count = $today_stmt->fetchColumn();
         </button>
     </div>
 </div>
+
+
 
 <!-- Confetti CDN -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
@@ -798,23 +832,26 @@ passImg.src = (tahapClean === 'SVM')
     : 'ImageGalleries/default_pass.jpg?' + new Date().getTime();
 
         body.innerHTML = `
-            <div class="detail-grid">
-                <strong>Nama Pelajar</strong>    <div><b>${d.nama}</b></div>
-                <strong>Tahap</strong>           <div><span class="badge ${d.tahap}">${d.tahap}</span></div>
-                <strong>Program</strong>         <div>${d.program || '-'} / <b>${d.semester || '-'}</b></div>
-                <strong>Telefon</strong>         <div>${d.telefon}</div>
-                <strong>Jantina / Kaum</strong>   <div>${d.jantina} / ${d.kaum}</div>
-                <strong>Tarikh & Masa</strong>   <div><b>${d.tarikh}</b></div>
-                <strong>Jenis Sesi</strong>      <div>${d.jenis_sesi}</div>
-                <strong>Jenis Kaunseling</strong><div>${d.jenis_kaunseling || 'Tiada'}</div>
-                <strong>Kaunselor</strong>       <div><b>${d.kaunselor || 'Belum Ditentukan'}</b></div>
-                <strong>Sebab Penuh</strong>
-                <div style="grid-column: 1 / -1; background:#f8f9ff; padding:20px; border-radius:12px; border-left:5px solid var(--purple); white-space: pre-wrap;">
-                    ${d.sebab || '<em style="color:#888;">Tiada sebab diberikan</em>'}
-                </div>
-                <strong>Status</strong>          <div><span class="badge ${d.status==='Baru'?'Baru':d.status}">${d.status}</span></div>
-            </div>
-        `;
+    <div class="detail-grid">
+        <strong>Nama Pelajar</strong>      <div><b>${d.nama}</b></div>
+        <strong>Angka Giliran</strong>   <div><b>${d.student_id || '-'}</b></div>
+        <strong>Tahap</strong>           <div><span class="badge ${d.tahap}">${d.tahap}</span></div>
+        <strong>Program / Sem</strong>   <div>${d.program || '-'} / <b>${d.semester || '-'}</b></div>
+        <strong>Telefon</strong>         <div>${d.telefon}</div>
+        <strong>Jantina / Kaum</strong>   <div>${d.jantina} / ${d.kaum}</div>
+        <strong>Tarikh & Masa</strong>   <div><b>${d.tarikh}</b></div>
+        
+        <strong>Jenis Sesi / Kaunseling</strong> 
+        <div>${d.jenis_sesi} / <b>${d.jenis_kaunseling || 'Tiada'}</b></div>
+        
+        <strong>Kaunselor</strong>        <div><b>${d.kaunselor || 'Belum Ditentukan'}</b></div>
+        
+        <strong>Sebab Penuh</strong>
+        <div style="grid-column: 1 / -1; background:#f8f9ff; padding:20px; border-radius:12px; border-left:5px solid var(--purple); white-space: pre-wrap;">
+            ${d.sebab || '<em style="color:#888;">Tiada sebab diberikan</em>'}
+        </div>
+    </div>
+`;
 
         footer.innerHTML = '';
 
@@ -992,7 +1029,7 @@ passImg.src = (tahapClean === 'SVM')
             closeModal();
         }
     });
-
+    
     // Password form submit
     document.getElementById('changePassForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -1018,6 +1055,14 @@ passImg.src = (tahapClean === 'SVM')
             messageDiv.innerHTML = 'Ralat sambungan. Sila cuba lagi.';
         });
     });
+    // Fungsi untuk membuka modal jemputan
+window.openInviteModal = function() {
+    document.getElementById('inviteModal').style.display = 'flex';
+    document.getElementById('displayArea').style.display = 'none';
+    document.getElementById('btnGenerate').style.display = 'block';
+};
+
+
 </script>
 </body>
 </html>

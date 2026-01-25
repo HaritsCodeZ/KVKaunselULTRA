@@ -351,6 +351,34 @@ $top_programs = $pdo->query("
         .btn-cancel { background: #eee; color: #666; }
         .btn-save { background: var(--purple); color: white; }
         .btn-save:hover { background: #7c4dff; }
+
+        @keyframes whitePulse {
+    0% {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        opacity: 0.8;
+    }
+    50% {
+        text-shadow: 0 0 20px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.6);
+        opacity: 1;
+        transform: scale(1.02);
+    }
+    100% {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        opacity: 0.8;
+    }
+}
+
+.pulse-text {
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    color: white;
+    width: 100%;
+    font-weight: bold;
+    display: block;
+    animation: whitePulse 2s infinite ease-in-out;
+    transition: transform 0.3s ease;
+}
     </style>
 </head>
 <body>
@@ -391,6 +419,9 @@ $top_programs = $pdo->query("
     <a href="KVK_Admin_CgMuhirman_Laporan.php" class="menu-item active">
         <i class="fas fa-chart-line"></i><span>Laporan</span>
     </a>
+    <div class="pulse-text">
+    Dapatkan Kod Jemputan Di Laman Utama!
+</div>
 </div>
 
 <!-- PASSWORD CHANGE MODAL -->
@@ -613,6 +644,34 @@ $top_programs = $pdo->query("
     </div>
 </div>
 
+<div id="inviteModal" class="modal-overlay">
+    <div class="modal-content-password"> <div class="modal-header-password">
+            <h3>Jana Kod Jemputan</h3>
+            <span class="close-modal-password" onclick="closeInviteModal()">&times;</span>
+        </div>
+        
+        <div style="padding: 30px; text-align: center;">
+            <p style="margin-bottom: 20px; color: #666; font-size: 14px;">
+                Klik butang di bawah untuk menjana kod pendaftaran baru bagi pelajar.
+            </p>
+            
+            <div id="displayArea" style="display:none; background: #f8f9ff; border: 2px dashed var(--purple); padding: 25px; border-radius: 16px; margin-bottom: 20px; animation: popIn 0.3s ease;">
+                <span style="font-size: 11px; color: var(--purple); font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Kod Anda:</span>
+                <div id="generatedCode" style="font-size: 42px; font-weight: 800; color: #333; letter-spacing: 8px; margin: 10px 0;"></div>
+                <small style="color: #ec4899; font-weight: 600;">*Sah untuk 3 minit sahaja</small>
+            </div>
+
+            <button type="button" onclick="generateInvite()" id="btnGenerate" class="btn-save" style="width: 100%; margin: 0; padding: 16px; justify-content: center;">
+                <i class="fas fa-magic"></i> &nbsp; Jana Kod Sekarang
+            </button>
+            
+            <button type="button" id="btnInviteDone" onclick="closeInviteModal()" class="btn-cancel" style="display:none; width: 100%; margin: 10px 0 0 0; padding: 12px; justify-content: center;">
+                Tutup
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Profile dropdown
@@ -700,6 +759,49 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+window.openInviteModal = function() {
+    document.getElementById('inviteModal').style.display = 'flex';
+    document.getElementById('displayArea').style.display = 'none';
+    document.getElementById('btnGenerate').style.display = 'block';
+};
+
+window.closeInviteModal = function() {
+    document.getElementById('inviteModal').style.display = 'none';
+};
+
+// Fungsi utama menjana kod
+function generateInvite() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Elakkan I, O, 1, 0 untuk elak keliru
+    let result = '';
+    for (let i = 0; i < 6; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    // Paparkan kod pada UI
+    document.getElementById('generatedCode').innerText = result;
+    document.getElementById('displayArea').style.display = 'block';
+    document.getElementById('btnGenerate').style.display = 'none';
+
+    // Hantar ke backend menggunakan Fetch API untuk disimpan dalam DB
+    const formData = new FormData();
+    formData.append('invite_code', result);
+
+    fetch('save_invite_code.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.status === 'success') {
+            console.log('Kod berjaya disimpan');
+        } else {
+            alert('Ralat menyimpan kod: ' + data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
 </script>
 
 </body>

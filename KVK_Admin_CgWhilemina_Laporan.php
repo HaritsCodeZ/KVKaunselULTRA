@@ -368,6 +368,35 @@ $top_programs = $top_programs->fetchAll(PDO::FETCH_ASSOC);
         .btn-cancel { background: #eee; color: #666; }
         .btn-save { background: var(--purple); color: white; }
         .btn-save:hover { background: #7c4dff; }
+
+         @keyframes whitePulse {
+    0% {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        opacity: 0.8;
+    }
+    50% {
+        text-shadow: 0 0 20px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.6);
+        opacity: 1;
+        transform: scale(1.02);
+    }
+    100% {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        opacity: 0.8;
+    }
+}
+
+.pulse-text {
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    color: white;
+    width: 100%;
+    font-weight: bold;
+    display: block;
+    animation: whitePulse 2s infinite ease-in-out;
+    transition: transform 0.3s ease;
+}
+
     </style>
 </head>
 <body>
@@ -408,6 +437,9 @@ $top_programs = $top_programs->fetchAll(PDO::FETCH_ASSOC);
     <a href="KVK_Admin_CgWhilemina_Laporan.php" class="menu-item active">
         <i class="fas fa-chart-line"></i><span>Laporan</span>
     </a>
+    <div class="pulse-text">
+    Dapatkan Kod Jemputan Di Laman Utama!
+</div>
 </div>
 
 <!-- PASSWORD CHANGE MODAL -->

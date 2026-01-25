@@ -288,6 +288,8 @@ unset($_SESSION['error']);
             <i class="fas fa-eye toggle-password" onclick="togglePass('reg-confirm', this)"></i>
         </div>
         
+        <input type="text" name="invite_code" placeholder="Dapatkan Kod Jemputan Dari Admin" required>
+
 <?php if($error): ?>
     <div class="message-box message-error">
         <?php echo $error; ?>

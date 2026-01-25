@@ -239,7 +239,7 @@
                     <select name="program" required>
                         <option value="" disabled selected>Pilih program anda</option>
                         <option>Program Teknologi Elektrik</option><option>Perakaunan</option><option>Program Sistem Komputer Dan Rangkaian</option>
-                        <option>Program Hospitaliti Seni Kulinari</option><option>Program Teknologi Automotif</option><option>Program Teknologi Kimpalan</option><option>Program Teknologi Pemesinan Industri</option>
+                        <option>Program Hospitaliti Seni Kulinari</option><option>Program Teknologi Automotif</option><option>Program Teknologi Kimpalan</option><option>Program Teknologi Pemesinan Industri</option><option>Program Teknologi Pembinaan</option>
                     </select>
                 </div>
                 <div class="form-group"><label>Semester Anda</label>
@@ -256,7 +256,7 @@
         <div class="form-area" id="step2">
             <form onsubmit="return false;">
                 <div class="form-group"><label>Jantina Anda</label><select name="jantina" required><option value="" disabled selected>Pilih jantina</option><option>Lelaki</option><option>Perempuan</option></select></div>
-                <div class="form-group"><label>Kaum Anda</label><select name="kaum" required><option value="" disabled selected>Pilih kaum</option><option>Melayu</option><option>Cina</option><option>Bumiputera</option><option>Lain-lain</option></select></div>
+                <div class="form-group"><label>Kaum Anda</label><select name="kaum" required><option value="" disabled selected>Pilih kaum</option><option>Melayu</option><option>Cina</option><option>Iban</option><option>Bumiputera</option><option>Lain-lain</option></select></div>
                 <div class="form-group"><label>No Telefon Anda</label><input type="tel" name="telefon" required placeholder="Contoh: 60123456789" pattern="[0-9]{10,12}"></div>
                 <div class="button-group"><button type="button" class="btn-kembali" onclick="nextStep(1)">Kembali</button><button type="button" class="btn-teruskan" onclick="nextStep(3)">Teruskan</button></div>
             </form>
@@ -309,8 +309,8 @@
                     <h1 class="step5-title">Terima Kasih!</h1>
                     <p class="step5-desc">
                         Tempahan anda telah berjaya dihantar.<br>
-                        Kaunselor akan menghubungi anda melalui KaunselMel<br>
-                        dalam masa <strong>24 jam</strong>.
+                        Kaunselor akan menghubungi anda melalui Whatsapp<br>
+                        dalam masa <strong>yang terdekat</strong>.
                     </p>
                     <button type="button" class="btn-success-dashboard" onclick="location.href='KVK_Registration.php'">Tempahan Selesai</button>
                 </div>

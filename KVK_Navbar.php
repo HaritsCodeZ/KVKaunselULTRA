@@ -214,7 +214,7 @@ if (basename($_SERVER['PHP_SELF']) === 'UltimateLoginPage.php') {
 </style>
 
 <header class="navbar" id="navbar">
-    <div class="nav-left" onclick="location.href='KVK_Homepage.php'">
+    <div class="nav-left">
         <img src="ImageGalleries/KVKaunsel_Logo-New.png" alt="KVKaunsel Logo">
         <div class="logo-text">KVKaunsel</div>
     </div>

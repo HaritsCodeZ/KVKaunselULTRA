@@ -110,9 +110,9 @@ session_start();  // PENTING! Letak di atas sekali
             <div class="profile-img"><img src="Team/CikguMuhirman_jpeg-removebg-preview.png" alt="En. Muhirman"></div>
             <div class="profile-info">
                 <h3>En. Muhirman Bin <br>Mu-Alim</h3>
-                <div class="title">Ketua Unit Kaunseling & PRS</div>
+                <div class="title">Ketua Unit Psikologi Dan Kerjaya</div>
                 <p>Beliau berpengalaman dalam bidang bimbingan dan kaunseling dengan penekanan terhadap pendekatan terapi seni dan mindfulness. Pendekatan ini memberi ruang kepada individu untuk meneroka emosi, mengurus tekanan serta membina keseimbangan diri melalui kaedah yang kreatif dan berstruktur.</p>
-                <a href="https://wa.me/60123456789" class="whatsapp-btn" target="_blank">Hubungi En. Muhirman</a>
+                <a href="https://wa.me/601119861202" class="whatsapp-btn" target="_blank">Hubungi En. Muhirman</a>
             </div>
         </div>
 
@@ -122,7 +122,7 @@ session_start();  // PENTING! Letak di atas sekali
                 <h3>Pn. Tanita Anak Numpang</h3>
                 <div class="title">Kaunselor</div>
                 <p>Beliau merupakan kaunselor yang berpengalaman dalam membantu pelajar mengurus isu emosi dan tekanan. Pendekatan kaunseling yang tenang dan berfokus kepada kesejahteraan emosi membantu pelajar berasa selesa untuk berkongsi serta memahami diri dengan lebih baik.</p>
-                <a href="https://wa.me/60198765432" class="whatsapp-btn" target="_blank">Hubungi Pn. Tanita</a>
+                <a href="https://wa.me/60195429585" class="whatsapp-btn" target="_blank">Hubungi Pn. Tanita</a>
             </div>
         </div>
 
@@ -131,8 +131,8 @@ session_start();  // PENTING! Letak di atas sekali
             <div class="profile-info">
                 <h3>Pn. Whilemina Anak Gregory Jimbun</h3>
                 <div class="title">Kaunselor</div>
-                <p>Beliau merupakan kaunselor berpengalaman dengan lebih 18 tahun dalam bidang kaunseling, khususnya dalam kaunseling kerjaya, pengurusan trauma dan pembangunan diri. Kepakaran serta pendekatan yang matang dan berfokus membantu pelajar membuat perancangan masa depan dengan lebih jelas serta membina kekuatan dalaman secara berperingkat.</p>
-                <a href="https://wa.me/60111222333" class="whatsapp-btn" target="_blank">Hubungi Pn. Whilemina</a>
+                <p>Beliau merupakan kaunselor berpengalaman dalam bidang kaunseling, khususnya dalam kaunseling kerjaya, pengurusan trauma dan pembangunan diri. Kepakaran serta pendekatan yang matang dan berfokus membantu pelajar membuat perancangan masa depan dengan lebih jelas.</p>
+                <a href="https://wa.me/601116069009" class="whatsapp-btn" target="_blank">Hubungi Pn. Whilemina</a>
             </div>
         </div>
     </div>

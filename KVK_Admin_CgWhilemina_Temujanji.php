@@ -49,14 +49,19 @@ foreach ($bookings as $booking) {
     $end = date('Y-m-d H:i:s', strtotime($start . ' +1 hour'));
     $timeDisplay = date('h:i A', strtotime($start));
 
+   $events = [];
+foreach ($bookings as $booking) {
+    // Pastikan tarikh hanya Y-m-d supaya dia jadi 'allDay'
+    $startDate = date('Y-m-d', strtotime($booking['tarikh_masa'])); 
+    $timeDisplay = date('h:i A', strtotime($booking['tarikh_masa']));
+
     $events[] = [
         'id' => $booking['id'],
-        'title' => '',
-        'start' => $start,
-        'end' => $end,
-        'backgroundColor' => $colors[$color_index % count($colors)],
-        'borderColor' => $colors[$color_index % count($colors)],
-        'textColor' => '#2d3436',
+        'title' => '<i class="fas fa-bell"></i>', // Ikon loceng
+        'start' => $startDate,
+        'allDay' => true, // Wajib true supaya duduk tengah kotak
+        'backgroundColor' => 'transparent', // Hilangkan warna kotak
+        'borderColor' => 'transparent',
         'extendedProps' => [
             'nama' => $booking['nama'],
             'waktu' => $timeDisplay,
@@ -64,6 +69,7 @@ foreach ($bookings as $booking) {
             'program_sem' => $booking['program'] . ' Sem ' . $booking['semester']
         ]
     ];
+}
     $color_index++;
 }
 ?>
@@ -242,22 +248,46 @@ foreach ($bookings as $booking) {
         @keyframes waveFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes shine { 0% { left: -100%; } 50% { left: 100%; } 100% { left: 100%; } }
 
-        .fc-daygrid-event {
-            height: 10px !important;
-            width: 10px !important;
-            border-radius: 50% !important;
-            margin: 3px 5px !important;
-            padding: 0 !important;
-            font-size: 0 !important;
-            border: none !important;
-        }
+        /* Styling Ikon Loceng Tengah Kotak */
+.fc-daygrid-event {
+    background: transparent !important;
+    border: none !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
 
-        .fc-daygrid-event-harness {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            padding-bottom: 4px;
-        }
+.fc-daygrid-event i { 
+    color: #ffe600; /* Warna kuning loceng */
+    font-size: 30px; 
+    position: relative; 
+    z-index: 2; 
+}
+
+/* Kesan Bulatan Berdenyut (Pulse) */
+.fc-daygrid-event-harness {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+}
+
+.fc-daygrid-event-harness::after {
+    content: '';
+    position: absolute;
+    width: 40px; 
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    z-index: 1;
+    animation: bellPulse 2s infinite ease-out;
+}
+
+@keyframes bellPulse {
+    0% { transform: scale(0.6); opacity: 0.8; }
+    100% { transform: scale(1.8); opacity: 0; }
+}
 
         .fc-daygrid-day.fc-day:has(.fc-event) {
             animation: pulseGlow 3s ease-in-out infinite;
@@ -321,6 +351,55 @@ foreach ($bookings as $booking) {
         .btn-cancel { background: #eee; color: #666; }
         .btn-save { background: var(--purple); color: white; }
         .btn-save:hover { background: #7c4dff; }
+
+         @keyframes whitePulse {
+    0% {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        opacity: 0.8;
+    }
+    50% {
+        text-shadow: 0 0 20px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.6);
+        opacity: 1;
+        transform: scale(1.02);
+    }
+    100% {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        opacity: 0.8;
+    }
+}
+
+.pulse-text {
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    color: white;
+    width: 100%;
+    font-weight: bold;
+    display: block;
+    animation: whitePulse 2s infinite ease-in-out;
+    transition: transform 0.3s ease;
+}
+
+
+        /* Pastikan toolbar disusun secara flex (sebaris) */
+.fc-header-toolbar {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 15px !important; /* Jarak antara butang dan tajuk */
+}
+
+/* Hilangkan margin default FullCalendar yang buat dia lari baris */
+.fc-toolbar-chunk {
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Jarakkan sedikit tajuk bulan dari butang kiri/kanan */
+.fc-toolbar-title {
+    margin: 0 10px !important;
+}
+
     </style>
 </head>
 <body>
@@ -361,6 +440,9 @@ foreach ($bookings as $booking) {
     <a href="KVK_Admin_CgWhilemina_Laporan.php" class="menu-item <?= basename($_SERVER['PHP_SELF']) == 'KVK_Admin_CgWhilemina_Laporan.php' ? 'active' : '' ?>">
         <i class="fas fa-chart-line"></i><span>Laporan</span>
     </a>
+    <div class="pulse-text">
+    Dapatkan Kod Jemputan Di Laman Utama!
+</div>
 </div>
 
 <!-- PASSWORD MODAL -->
@@ -469,61 +551,39 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // FullCalendar
+    // --- INISIALISASI KALENDAR (VERSI BERSIH) ---
     var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        height: 'auto',
-        locale: 'ms',
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        buttonText: {
-            today: 'Hari Ini',
-            month: 'Bulan',
-            week: 'Minggu',
-            day: 'Hari'
-        },
-        events: <?= json_encode($events) ?>,
-
-        eventDidMount: function(info) {
-            info.el.title = info.event.extendedProps.nama + ' • ' + 
-                            info.event.extendedProps.waktu + '\n' +
-                            info.event.extendedProps.jenis + ' (' + 
-                            info.event.extendedProps.program_sem + ')';
-        },
-
-        eventClick: function(info) {
-            alert(
-                'Pelajar: ' + info.event.extendedProps.nama + '\n' +
-                'Masa: ' + info.event.extendedProps.waktu + '\n' +
-                'Jenis: ' + info.event.extendedProps.jenis + '\n' +
-                'Program: ' + info.event.extendedProps.program_sem
-            );
-        },
-
-        dateClick: function(info) {
-            var eventsOnDay = calendar.getEvents().filter(function(ev) {
-                return ev.start && ev.start.toISOString().slice(0, 10) === info.dateStr;
-            });
-
-            if (eventsOnDay.length === 0) {
-                alert('Tiada temujanji pada ' + info.dateStr);
-                return;
+    if (calendarEl) {
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            height: 'auto',
+            locale: 'ms',
+            headerToolbar: {
+                left: '',
+                center: 'prev title next', 
+                right: ''
+            },
+            events: <?php echo json_encode($events); ?>,
+            eventContent: function(arg) {
+    let bellSpan = document.createElement('span');
+    bellSpan.innerHTML = arg.event.title; // Ini akan tukar teks <i> kepada ikon
+    return { domNodes: [bellSpan] };
+},
+            eventDidMount: function(info) {
+                info.el.title = info.event.extendedProps.nama + ' (' + info.event.extendedProps.waktu + ')';
+            },
+            eventClick: function(info) {
+                alert(
+                    '🔔 TEMUJANJI KAUNSELING\n---------------------------\n' +
+                    'Nama: ' + info.event.extendedProps.nama + '\n' +
+                    'Masa: ' + info.event.extendedProps.waktu + '\n' +
+                    'Jenis: ' + info.event.extendedProps.jenis + '\n' +
+                    'Program: ' + info.event.extendedProps.program_sem
+                );
             }
-
-            var message = 'Temujanji pada ' + info.dateStr + ':\n\n';
-            eventsOnDay.forEach(function(ev) {
-                message += '• ' + ev.extendedProps.nama + '\n';
-                message += '  Masa: ' + ev.extendedProps.waktu + '\n\n';
-            });
-            alert(message);
-        }
-    });
-
-    calendar.render();
+        });
+        calendar.render();
+    }
 });
 </script>
 
